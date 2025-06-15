@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import reel from '../assets/reel.svg';
+import spools from '../assets/spools.svg';
 import tape1 from '../assets/tapes/1.svg';
 import tape2 from '../assets/tapes/2.svg';
 import tape3 from '../assets/tapes/3.svg';
@@ -52,10 +53,11 @@ class Cassette extends Component<CassetteProps, CassetteState> {
   render() {
     return (
       <div className={`tape ${this.getPlayStateClass()}`}>
-        <h1 className="tape-label">{this.props.label}</h1>
-        <img src={this.getCover(this.props.cover)} className="tape-cover" alt="tape" />
         <img src={reel} className="tape-reelA" alt="tape reel" />
         <img src={reel} className="tape-reelB" alt="tape reel" />
+        <img src={spools} className="tape-spools" alt="tape spools" />
+        <img src={this.getCover(this.props.cover)} className="tape-cover" alt="tape" />
+        <h1 className="tape-label">{this.props.label}</h1>
       </div>
     );
   }

@@ -7,6 +7,16 @@
 
 .tape-cover {
   width: 350px;
+  position: relative;
+  z-index: 2;
+}
+
+.tape-spools {
+  position: absolute;
+  width: 350px;
+  top: 0;
+  left: 0;
+  z-index: 1;
 }
 
 .tape-label {
@@ -20,6 +30,7 @@
   color: #000;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
   transform: rotate(-1deg);
+  z-index: 3;
 }
 
 .tape-reelA {
@@ -27,7 +38,7 @@
   width: 40px;
   left: 83px;
   top: 77px;
-  z-index: -1;
+  z-index: 0;
 }
 
 .tape-reelB {
@@ -35,7 +46,7 @@
   width: 40px;
   right: 83px;
   top: 77px;
-  z-index: -1;
+  z-index: 0;
 }
 
 // Forward play (default)
@@ -80,19 +91,20 @@
 
 // Stop state - no animation
 .tape-stop {
-  .tape-reelA, .tape-reelB {
+  .tape-reelA,
+  .tape-reelB {
     animation: none;
   }
 }
 
 @keyframes spin-forward {
   100% {
-    transform: rotate(-360deg);
+    transform: rotate(360deg);
   }
 }
 
 @keyframes spin-backward {
   100% {
-    transform: rotate(360deg);
+    transform: rotate(-360deg);
   }
 } 
