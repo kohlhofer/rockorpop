@@ -1,0 +1,98 @@
+.tape {
+  position: relative;
+  width: 350px;
+  height: 219px;
+  margin: 0 auto;
+}
+
+.tape-cover {
+  width: 350px;
+}
+
+.tape-label {
+  position: absolute;
+  margin: 0;
+  width: 100%;
+  top: 27px;
+  font-family: "Permanent Marker", cursive;
+  font-size: 16px;
+  text-align: center;
+  color: #000;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+  transform: rotate(-1deg);
+}
+
+.tape-reelA {
+  position: absolute;
+  width: 40px;
+  left: 83px;
+  top: 77px;
+  z-index: -1;
+}
+
+.tape-reelB {
+  position: absolute;
+  width: 40px;
+  right: 83px;
+  top: 77px;
+  z-index: -1;
+}
+
+// Forward play (default)
+.tape-fw {
+  .tape-reelA {
+    animation: spin-forward 1.5s linear infinite;
+  }
+  .tape-reelB {
+    animation: spin-forward 1s linear infinite;
+  }
+}
+
+// Backward play
+.tape-bw {
+  .tape-reelA {
+    animation: spin-backward 1.5s linear infinite;
+  }
+  .tape-reelB {
+    animation: spin-backward 1s linear infinite;
+  }
+}
+
+// Fast forward
+.tape-ffw {
+  .tape-reelA {
+    animation: spin-forward 0.75s linear infinite;
+  }
+  .tape-reelB {
+    animation: spin-forward 0.5s linear infinite;
+  }
+}
+
+// Fast backward
+.tape-fbw {
+  .tape-reelA {
+    animation: spin-backward 0.75s linear infinite;
+  }
+  .tape-reelB {
+    animation: spin-backward 0.5s linear infinite;
+  }
+}
+
+// Stop state - no animation
+.tape-stop {
+  .tape-reelA, .tape-reelB {
+    animation: none;
+  }
+}
+
+@keyframes spin-forward {
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+
+@keyframes spin-backward {
+  100% {
+    transform: rotate(360deg);
+  }
+} 
