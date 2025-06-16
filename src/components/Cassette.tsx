@@ -44,7 +44,7 @@ class Cassette extends Component<CassetteProps, CassetteState> {
     // Calculate spool sizes based on progress
     // At 0%: Left spool is full (large), Right spool is empty (small)
     // At 100%: Left spool is empty (small), Right spool is full (large)
-    const minRadius = 30; // Minimum outer radius
+    const minRadius = 55; // Minimum outer radius (ensures spool always visible)
     const maxRadius = 143; // Maximum outer radius (from original SVG)
     
     const leftSpoolRadius = minRadius + (maxRadius - minRadius) * (1 - normalizedProgress / 100);
@@ -123,22 +123,22 @@ class Cassette extends Component<CassetteProps, CassetteState> {
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="${rightSpoolRadius - 4}" 
+              r="${rightSpoolRadius - 5}" 
               fill="none" 
               stroke="#6C6C6C" 
-              stroke-width="8" 
+              stroke-width="10" 
             />
-            <!-- Inner structure (fixed) -->
+            <!-- Inner structure (fixed) - same as left spool -->
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="55" 
+              r="70" 
               fill="#6C6C6C" 
             />
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="52" 
+              r="67" 
               fill="none" 
               stroke="#3E3D3E" 
               stroke-width="6" 
@@ -146,7 +146,7 @@ class Cassette extends Component<CassetteProps, CassetteState> {
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="40" 
+              r="45" 
               fill="#B5B5B5" 
             />
           </g>
