@@ -62,10 +62,10 @@
 // Backward play
 .tape-bw {
   .tape-reelA {
-    animation: spin-backward 1.5s linear infinite;
+    animation: spin-backward 1s linear infinite;
   }
   .tape-reelB {
-    animation: spin-backward 1s linear infinite;
+    animation: spin-backward 1.5s linear infinite;
   }
 }
 
@@ -82,10 +82,10 @@
 // Fast backward
 .tape-fbw {
   .tape-reelA {
-    animation: spin-backward 0.75s linear infinite;
+    animation: spin-backward 0.5s linear infinite;
   }
   .tape-reelB {
-    animation: spin-backward 0.5s linear infinite;
+    animation: spin-backward 0.75s linear infinite;
   }
 }
 
