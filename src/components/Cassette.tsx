@@ -44,28 +44,29 @@ class Cassette extends Component<CassetteProps, CassetteState> {
     // Calculate spool sizes based on progress
     // At 0%: Left spool is full (large), Right spool is empty (small)
     // At 100%: Left spool is empty (small), Right spool is full (large)
-    const minRadius = 55; // Minimum outer radius (ensures spool always visible)
-    const maxRadius = 143; // Maximum outer radius (from original SVG)
+    const minTapeRadius = 65; // Minimum tape radius (ensures spool always visible)
+    const maxTapeRadius = 145; // Maximum tape radius (from original SVG)
     
-    const leftSpoolRadius = minRadius + (maxRadius - minRadius) * (1 - normalizedProgress / 100);
-    const rightSpoolRadius = minRadius + (maxRadius - minRadius) * (normalizedProgress / 100);
+    const leftTapeRadius = minTapeRadius + (maxTapeRadius - minTapeRadius) * (1 - normalizedProgress / 100);
+    const rightTapeRadius = minTapeRadius + (maxTapeRadius - minTapeRadius) * (normalizedProgress / 100);
     
     // Fixed center points and inner opening sizes
     const leftCenter = { x: 143, y: 143 }; // Spool A center
     const rightCenter = { x: 106, y: 106 }; // Spool B center (relative to its transform)
-    const innerRadius = 36; // Fixed inner opening radius
+    const innerRadius = 50; // Fixed inner opening radius
+    const rimRadius = 65; // Fixed light grey rim radius (small and constant)
     
     return `
       <svg width="350px" height="219px" viewBox="0 0 670 420" version="1.1" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <!-- Mask for left spool with hole -->
           <mask id="leftSpoolMask">
-            <circle cx="${leftCenter.x}" cy="${leftCenter.y}" r="${leftSpoolRadius + 10}" fill="white"/>
+            <circle cx="${leftCenter.x}" cy="${leftCenter.y}" r="${leftTapeRadius + 10}" fill="white"/>
             <circle cx="${leftCenter.x}" cy="${leftCenter.y}" r="${innerRadius}" fill="black"/>
           </mask>
           <!-- Mask for right spool with hole -->
           <mask id="rightSpoolMask">
-            <circle cx="${rightCenter.x}" cy="${rightCenter.y}" r="${rightSpoolRadius + 10}" fill="white"/>
+            <circle cx="${rightCenter.x}" cy="${rightCenter.y}" r="${rightTapeRadius + 10}" fill="white"/>
             <circle cx="${rightCenter.x}" cy="${rightCenter.y}" r="${innerRadius}" fill="black"/>
           </mask>
         </defs>
@@ -73,81 +74,73 @@ class Cassette extends Component<CassetteProps, CassetteState> {
         <g transform="translate(55.000000, 44.000000)">
           <!-- Left Spool (Spool-A) -->
           <g mask="url(#leftSpoolMask)">
-            <!-- Outer ring -->
+            <!-- Variable tape area (dark grey) - this scales with progress -->
             <circle 
               cx="${leftCenter.x}" 
               cy="${leftCenter.y}" 
-              r="${leftSpoolRadius}" 
+              r="${leftTapeRadius}" 
               fill="#3E3D3E" 
             />
+            <!-- Outer edge of tape -->
             <circle 
               cx="${leftCenter.x}" 
               cy="${leftCenter.y}" 
-              r="${leftSpoolRadius - 5}" 
+              r="${leftTapeRadius - 2}" 
               fill="none" 
               stroke="#6C6C6C" 
-              stroke-width="10" 
+              stroke-width="2" 
             />
-            <!-- Inner structure (fixed) -->
+            <!-- Fixed light grey rim (small and constant) -->
             <circle 
               cx="${leftCenter.x}" 
               cy="${leftCenter.y}" 
-              r="70" 
-              fill="#6C6C6C" 
+              r="${rimRadius}" 
+              fill="#B5B5B5" 
             />
+            <!-- Inner edge of rim -->
             <circle 
               cx="${leftCenter.x}" 
               cy="${leftCenter.y}" 
-              r="67" 
+              r="${rimRadius}" 
               fill="none" 
               stroke="#3E3D3E" 
-              stroke-width="6" 
-            />
-            <circle 
-              cx="${leftCenter.x}" 
-              cy="${leftCenter.y}" 
-              r="45" 
-              fill="#B5B5B5" 
+              stroke-width="4" 
             />
           </g>
           
           <!-- Right Spool (Spool-B) -->
           <g transform="translate(312.000000, 37.000000)" mask="url(#rightSpoolMask)">
-            <!-- Outer ring -->
+            <!-- Variable tape area (dark grey) - this scales with progress -->
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="${rightSpoolRadius}" 
+              r="${rightTapeRadius}" 
               fill="#3E3D3E" 
             />
+            <!-- Outer edge of tape -->
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="${rightSpoolRadius - 5}" 
+              r="${rightTapeRadius}" 
               fill="none" 
               stroke="#6C6C6C" 
-              stroke-width="10" 
+              stroke-width="2" 
             />
-            <!-- Inner structure (fixed) - same as left spool -->
+            <!-- Fixed light grey rim (small and constant) -->
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="70" 
-              fill="#6C6C6C" 
+              r="${rimRadius}" 
+              fill="#B5B5B5" 
             />
+            <!-- Inner edge of rim -->
             <circle 
               cx="${rightCenter.x}" 
               cy="${rightCenter.y}" 
-              r="67" 
+              r="${rimRadius}" 
               fill="none" 
               stroke="#3E3D3E" 
-              stroke-width="6" 
-            />
-            <circle 
-              cx="${rightCenter.x}" 
-              cy="${rightCenter.y}" 
-              r="45" 
-              fill="#B5B5B5" 
+              stroke-width="4" 
             />
           </g>
         </g>
