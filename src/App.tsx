@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Cassette from './components/Cassette';
+import TapeDropdown from './components/TapeDropdown';
 import './styles/App.scss';
 
 // Utility function to extract YouTube playlist ID and video ID from URL
@@ -146,6 +147,7 @@ function App() {
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const [currentVideoId, setCurrentVideoId] = useState<string>('');
+  const [playerResetKey, setPlayerResetKey] = useState(0);
   
   const totalCovers = 5;
   const totalBodyColors = 10;
@@ -274,27 +276,8 @@ function App() {
       });
     };
 
-    if (player) {
-      // If player exists, just load the new playlist
-      try {
-        player.loadPlaylist({
-          list: playlistId,
-          listType: 'playlist',
-          index: 0,
-          suggestedQuality: 'small',
-        });
-        setYtPlayState('STOP');
-      } catch (e) {
-        console.error('Error loading playlist:', e);
-        // If loading fails, reinitialize the player
-        initializePlayer();
-      }
-    } else {
-      // Initialize new player
-      initializePlayer();
-    }
-
-    // Cleanup function
+    // Always destroy and recreate the player on playerResetKey change
+    initializePlayer();
     return () => {
       if (player) {
         try {
@@ -304,7 +287,7 @@ function App() {
         }
       }
     };
-  }, [ytReady, playlistId]);
+  }, [ytReady, playlistId, playerResetKey]);
 
   // Calculate total playlist duration
   const getTotalPlaylistDuration = () => {
@@ -486,6 +469,54 @@ function App() {
     }
   };
 
+  // Tape presets for dropdown
+  const tapePresets = [
+    {
+      label: 'POP Top50 - USA',
+      url: '?cover=5&shell=2&bg=15&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
+    },
+    {
+      label: 'Campfire Classics',
+      url: '?shell=10&bg=6&label=Campfire%20Classics&playlist=RDCLAK5uy_liwwwIG8z4P25AWeLZ2Nvydx1GwbvndEI',
+    },
+    {
+      label: 'Back to School',
+      url: '?cover=2&bg=9&label=Back%20to%20School&playlist=RDCLAK5uy_leoTLrB1K_2VcTWqds82dBcjBSjrRfJxw',
+    },
+    {
+      label: 'BOC',
+      url: '?cover=4&bg=13&label=BOC&playlist=PL221B13914A7EF3A2',
+    },
+    // Add more presets here as needed
+  ];
+
+  // TapeDropdown state: no preset selected by default
+  const [selectedPreset, setSelectedPreset] = useState<string>('');
+
+  const handlePresetSelect = (selectedUrl: string) => {
+    if (!selectedUrl) return;
+    // Parse params from selectedUrl and update state
+    const params = new URLSearchParams(selectedUrl.startsWith('?') ? selectedUrl.slice(1) : selectedUrl);
+    const cover = parseInt(params.get('cover') || '1');
+    const shell = parseInt(params.get('shell') || '1');
+    const bg = parseInt(params.get('bg') || '1');
+    const label = params.get('label') ? decodeURIComponent(params.get('label')!) : '';
+    const playlist = params.get('playlist') || '';
+    const video = params.get('video') || '';
+    setCurrentCover(cover);
+    setCurrentBodyColor(shell);
+    setCurrentBackground(bg);
+    setCurrentLabel(label);
+    setPlaylistUrl(reconstructYouTubeUrl(playlist, video));
+    updateUrlParams(cover, shell, bg, label, playlist, video);
+    setSelectedPreset(''); // Reset dropdown to label
+  };
+
+  // Add useEffect to increment playerResetKey when playlistUrl changes
+  useEffect(() => {
+    setPlayerResetKey(k => k + 1);
+  }, [playlistUrl]);
+
   return (
     <div className={`app background-${currentBackground}`}>
       {/* Top Left Action Button */}
@@ -493,6 +524,12 @@ function App() {
         <button className="action-btn share-btn" onClick={handleShareTape}>
           Save and share
         </button>
+        <TapeDropdown
+          options={tapePresets.map(p => ({ label: p.label, value: p.url }))}
+          value={selectedPreset}
+          onSelect={handlePresetSelect}
+          label="Tapes..."
+        />
       </div>
 
       {/* Top Right Action Buttons */}
@@ -519,7 +556,7 @@ function App() {
             progress={currentProgress}
           />
           {/* YouTube Player (hidden) */}
-          <div id="yt-player" ref={playerRef} style={{ width: 0, height: 0, overflow: 'hidden' }} />
+          <div id="yt-player" ref={playerRef} style={{ width: 0, height: 0, overflow: 'hidden' }} key={playerResetKey} />
           {/* Playback Controls */}
           <div className="yt-controls-container">
             <div className="yt-controls">
