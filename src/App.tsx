@@ -7,41 +7,87 @@ type PlayState = 'STOP' | 'FW' | 'BW' | 'FFW' | 'FBW';
 function App() {
   const [playState, setPlayState] = useState<PlayState>('FW');
   const [currentCover, setCurrentCover] = useState<number>(1);
-  const [progress, setProgress] = useState<number>(50);
+  const [currentBodyColor, setCurrentBodyColor] = useState<number>(1);
+  const [currentLabel, setCurrentLabel] = useState<string>('This tape is for you');
+  const [progress, setProgress] = useState<number>(25);
   
   const totalCovers = 5;
+  const totalBodyColors = 10;
   
-  const nextCover = () => {
-    setCurrentCover(prev => prev === totalCovers ? 1 : prev + 1);
-  };
-  
-  const prevCover = () => {
-    setCurrentCover(prev => prev === 1 ? totalCovers : prev - 1);
-  };
+  const bodyColorNames = [
+    'Blue', 'Orange', 'Dark Grey', 'Light Grey', 
+    'Grass Green', 'Cheerful Yellow', 'Red', 'Purple', 'Pink', 'Cream'
+  ];
+
+  const defaultLabels = [
+    "Mix Tape",
+    "Summer Vibes", 
+    "Road Trip",
+    "Chill Out",
+    "Dance Party",
+    "Study Session",
+    "Workout Mix",
+    "Late Night",
+    "Good Times",
+    "Memories"
+  ];
   
   const goToCover = (coverNumber: number) => {
     setCurrentCover(coverNumber);
+  };
+
+  const goToBodyColor = (colorNumber: number) => {
+    setCurrentBodyColor(colorNumber);
+  };
+
+  const randomizeAll = () => {
+    setCurrentCover(Math.floor(Math.random() * totalCovers) + 1);
+    setCurrentBodyColor(Math.floor(Math.random() * totalBodyColors) + 1);
+    setCurrentLabel(defaultLabels[Math.floor(Math.random() * defaultLabels.length)]);
+    setProgress(Math.floor(Math.random() * 101)); // 0-100
+    // Keep current play state - don't randomize that
   };
 
   const handleProgressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProgress(Number(event.target.value));
   };
 
+  const handleLabelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCurrentLabel(event.target.value);
+  };
+
   return (
     <div className="app">
       <h1>Cassette Component Demo</h1>
       <div className="demo-container">
-        <button className="carousel-btn carousel-btn-prev" onClick={prevCover}>
-          ‹
-        </button>
         <div className="cassette-wrapper">
           <Cassette 
-            label="This tape is for you" 
+            label={currentLabel} 
             cover={currentCover} 
+            bodyColor={currentBodyColor}
             playState={playState} 
             progress={progress}
           />
+          
+          <div className="randomize-section">
+            <button className="randomize-btn" onClick={randomizeAll}>
+              🎲 Randomize All
+            </button>
+          </div>
+
+          <div className="label-input">
+            <h3>Label Text</h3>
+            <input
+              type="text"
+              value={currentLabel}
+              onChange={handleLabelChange}
+              placeholder="Enter cassette label..."
+              className="label-text-input"
+            />
+          </div>
+
           <div className="cover-indicators">
+            <h3>Cover Design</h3>
             {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
               <button
                 key={coverNum}
@@ -52,10 +98,20 @@ function App() {
               </button>
             ))}
           </div>
+          <div className="body-color-indicators">
+            <h3>Shell Color</h3>
+            {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => (
+              <button
+                key={colorNum}
+                className={`color-indicator ${currentBodyColor === colorNum ? 'active' : ''}`}
+                onClick={() => goToBodyColor(colorNum)}
+                title={bodyColorNames[colorNum - 1]}
+              >
+                {colorNum}
+              </button>
+            ))}
+          </div>
         </div>
-        <button className="carousel-btn carousel-btn-next" onClick={nextCover}>
-          ›
-        </button>
       </div>
       
       <div className="progress-control">
