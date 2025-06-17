@@ -553,39 +553,47 @@ body {
   }
   
   .shuffle-btn {
-    width: 100%;
-    padding: 0.75rem 1.5rem;
-    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(20, 20, 20, 0.48);
+    color: #fff;
     border: none;
-    border-radius: 8px;
-    background: linear-gradient(145deg, #4CAF50, #45a049);
-    color: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-radius: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 
-      0 3px 6px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-
-    @media (max-width: 767px) {
-      padding: 0.8rem 1.5rem;
-      font-size: 1rem;
+    padding: 0.45rem 1.2rem;
+    box-shadow: 0 1.5px 6px rgba(0,0,0,0.13), 0 1px 0 rgba(255,255,255,0.08) inset;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    outline: none;
+    margin-top: 0.7rem;
+    user-select: none;
+    backdrop-filter: blur(2px) saturate(1.05);
+    svg {
+      width: 1.2em;
+      height: 1.2em;
+      fill: currentColor;
+      display: inline-block;
+      vertical-align: middle;
     }
-
-    &:hover {
-      background: linear-gradient(145deg, #45a049, #3d8b40);
-      transform: translateY(-1px);
-      box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    &:hover, &:focus {
+      background: rgba(60, 60, 60, 0.93);
+      color: #fff;
+      box-shadow: 0 2.5px 10px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.10) inset;
     }
-
     &:active {
-      transform: translateY(1px);
-      box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      background: rgba(20, 20, 20, 0.90);
+      color: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.15) inset;
+    }
+    &:disabled {
+      background: rgba(60, 60, 60, 0.32);
+      color: #bbb;
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 0.6;
     }
   }
 }
