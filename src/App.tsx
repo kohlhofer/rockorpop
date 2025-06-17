@@ -143,6 +143,8 @@ function App() {
   const [playlistLength, setPlaylistLength] = useState(0);
   const [playlistDurations, setPlaylistDurations] = useState<number[]>([]);
   const progressInterval = useRef<number | null>(null);
+  const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   
   const totalCovers = 5;
   const totalBodyColors = 10;
@@ -210,7 +212,8 @@ function App() {
       setYtPlayState('STOP');
       return;
     }
-    const newPlayer = new (window as any).YT.Player('yt-player', {
+    const playerTarget = document.getElementById('yt-player-bar') || document.getElementById('yt-player');
+    const newPlayer = new (window as any).YT.Player(playerTarget, {
       height: '0',
       width: '0',
       playerVars: {
@@ -324,26 +327,28 @@ function App() {
   };
   
   const handleNext = () => {
-    if (player) {
-      const currentIndex = player.getPlaylistIndex();
-      const playlistLength = playlistDurations.length;
-      // Only skip if not at the end of playlist
-      if (playlistLength > 0 && currentIndex < playlistLength - 1) {
-        player.nextVideo();
-        // Do not force progress update here; let the interval handle it
-      }
+    if (!player) return;
+    try {
+      player.nextVideo();
+      setTimeout(() => {
+        const index = player.getPlaylistIndex();
+        setCurrentTrackIndex(index);
+      }, 100);
+    } catch (e) {
+      console.log('Error handling next:', e);
     }
   };
   
   const handlePrev = () => {
-    if (player) {
-      const currentIndex = player.getPlaylistIndex();
-      const playlistLength = playlistDurations.length;
-      // Only skip if not at the start of playlist
-      if (playlistLength > 0 && currentIndex > 0) {
-        player.previousVideo();
-        // Do not force progress update here; let the interval handle it
-      }
+    if (!player) return;
+    try {
+      player.previousVideo();
+      setTimeout(() => {
+        const index = player.getPlaylistIndex();
+        setCurrentTrackIndex(index);
+      }, 100);
+    } catch (e) {
+      console.log('Error handling prev:', e);
     }
   };
 
@@ -414,6 +419,49 @@ function App() {
     // Open the config panel
     setConfigPanelOpen(true);
   };
+
+  // Update video info when track changes
+  useEffect(() => {
+    if (!player) return;
+    
+    const updateVideoInfo = () => {
+      try {
+        // Get current video data
+        const videoData = player.getVideoData();
+        const title = videoData?.title || '';
+        setCurrentVideoTitle(title);
+
+        // Get playlist info
+        const playlist = player.getPlaylist();
+        if (playlist) {
+          const index = player.getPlaylistIndex();
+          setCurrentTrackIndex(index);
+          setPlaylistLength(playlist.length);
+        }
+      } catch (e) {
+        console.log('Error updating video info:', e);
+      }
+    };
+
+    // Update info when player state changes
+    const handleStateChange = (event: any) => {
+      const PlayerState = (window as any).YT.PlayerState;
+      if (event.data === PlayerState.PLAYING || 
+          event.data === PlayerState.PAUSED || 
+          event.data === PlayerState.ENDED) {
+        updateVideoInfo();
+      }
+    };
+
+    player.addEventListener('onStateChange', handleStateChange);
+    
+    // Initial update
+    setTimeout(updateVideoInfo, 1000); // Give player time to initialize
+
+    return () => {
+      player.removeEventListener('onStateChange', handleStateChange);
+    };
+  }, [player]);
 
   return (
     <div className={`app background-${currentBackground}`}>
@@ -649,6 +697,25 @@ function App() {
           </div>
         </>
       )}
+
+      {/* Bottom Bar for YouTube compliance */}
+      <div className="yt-bottom-bar">
+        <div className="yt-bottom-bar-content">
+          <div className="yt-track-info">
+            <div className="yt-track-title">{currentVideoTitle || 'No track playing'}</div>
+            <div className="yt-track-number">
+              {playlistLength > 0 && typeof currentTrackIndex === 'number' 
+                ? `${currentTrackIndex + 1}/${playlistLength}` 
+                : ''}
+            </div>
+          </div>
+        </div>
+        <div className="yt-bottom-bar-thumb">
+          <div className="yt-thumb-video">
+            <div id="yt-player-bar" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
