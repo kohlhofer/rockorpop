@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Cassette from './components/Cassette';
 import './styles/App.scss';
 
@@ -130,6 +130,19 @@ function App() {
   const [configPanelOpen, setConfigPanelOpen] = useState<boolean>(false);
   const [shareDialogOpen, setShareDialogOpen] = useState<boolean>(false);
   const [copySuccess, setCopySuccess] = useState<boolean>(false);
+  const [player, setPlayer] = useState<any>(null);
+  const [ytReady, setYtReady] = useState(false);
+  const [ytPlayState, setYtPlayState] = useState<'STOP' | 'FW'>('STOP');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
+  const [currentProgress, setCurrentProgress] = useState(0);
+  const [currentDuration, setCurrentDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [playlistIndex, setPlaylistIndex] = useState(0);
+  const [playlistLength, setPlaylistLength] = useState(0);
+  const [playlistDurations, setPlaylistDurations] = useState<number[]>([]);
+  const progressInterval = useRef<number | null>(null);
   
   const totalCovers = 5;
   const totalBodyColors = 10;
@@ -170,6 +183,169 @@ function App() {
     const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
     updateUrlParams(currentCover, currentBodyColor, currentBackground, currentLabel, playlistId, videoId);
   }, [currentCover, currentBodyColor, currentBackground, currentLabel, playlistUrl]);
+
+  // Load YouTube IFrame API
+  useEffect(() => {
+    if ((window as any).YT && (window as any).YT.Player) {
+      setYtReady(true);
+      return;
+    }
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.body.appendChild(tag);
+    (window as any).onYouTubeIframeAPIReady = () => setYtReady(true);
+  }, []);
+
+  // Create or update player when ready or playlist changes
+  useEffect(() => {
+    if (!ytReady || !playlistId) return;
+    if (player) {
+      // Always load the new playlist when playlistId or videoId changes
+      player.loadPlaylist({
+        list: playlistId,
+        listType: 'playlist',
+        index: 0,
+        suggestedQuality: 'small',
+      });
+      setYtPlayState('STOP');
+      return;
+    }
+    const newPlayer = new (window as any).YT.Player('yt-player', {
+      height: '0',
+      width: '0',
+      playerVars: {
+        listType: 'playlist',
+        list: playlistId,
+        autoplay: 0,
+        controls: 0,
+        modestbranding: 1,
+        rel: 0,
+        showinfo: 0,
+      },
+      events: {
+        onReady: () => {
+          setYtPlayState('STOP');
+          // Get initial playlist info
+          const playlist = newPlayer.getPlaylist();
+          setPlaylistLength(playlist.length);
+          // Get durations for all videos in playlist
+          const durations: number[] = [];
+          playlist.forEach((videoId: string, index: number) => {
+            newPlayer.cueVideoById(videoId);
+            durations[index] = newPlayer.getDuration();
+          });
+          setPlaylistDurations(durations);
+          // Reset to first video
+          newPlayer.playVideoAt(0);
+          newPlayer.pauseVideo();
+        },
+        onStateChange: (event: any) => {
+          if (event.data === 1) { // Playing
+            setYtPlayState('FW');
+            startProgressTracking();
+          } else { // Paused or ended
+            setYtPlayState('STOP');
+            stopProgressTracking();
+          }
+        },
+        onPlaybackRateChange: (event: any) => {
+          stopProgressTracking();
+          if (event.data > 0) {
+            startProgressTracking();
+          }
+        }
+      },
+    });
+    setPlayer(newPlayer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ytReady, playlistId, videoId, playlistUrl]);
+
+  // Calculate total playlist duration
+  const getTotalPlaylistDuration = () => {
+    return playlistDurations.reduce((total, duration) => total + duration, 0);
+  };
+
+  // Calculate progress based on current position in playlist
+  const calculatePlaylistProgress = () => {
+    if (!player || playlistDurations.length === 0) return 0;
+    
+    const currentIndex = player.getPlaylistIndex();
+    const currentTime = player.getCurrentTime();
+    
+    // Sum up durations of completed videos
+    let completedDuration = 0;
+    for (let i = 0; i < currentIndex; i++) {
+      completedDuration += playlistDurations[i];
+    }
+    
+    // Add current video's progress
+    const totalProgress = completedDuration + currentTime;
+    const totalDuration = getTotalPlaylistDuration();
+    
+    // Normalize to 0-100 range
+    return Math.min(100, Math.max(0, (totalProgress / totalDuration) * 100));
+  };
+
+  // Start tracking progress
+  const startProgressTracking = () => {
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current);
+    }
+    
+    progressInterval.current = setInterval(() => {
+      if (player) {
+        const progress = calculatePlaylistProgress();
+        setCurrentProgress(progress);
+      }
+    }, 100);
+  };
+
+  // Stop tracking progress
+  const stopProgressTracking = () => {
+    if (progressInterval.current) {
+      clearInterval(progressInterval.current);
+      progressInterval.current = null;
+    }
+  };
+
+  // Playback controls
+  const handlePlay = () => {
+    if (player) {
+      player.playVideo();
+      startProgressTracking();
+    }
+  };
+  
+  const handlePause = () => {
+    if (player) {
+      player.pauseVideo();
+      stopProgressTracking();
+    }
+  };
+  
+  const handleNext = () => {
+    if (player) {
+      const currentIndex = player.getPlaylistIndex();
+      const playlistLength = playlistDurations.length;
+      // Only skip if not at the end of playlist
+      if (playlistLength > 0 && currentIndex < playlistLength - 1) {
+        player.nextVideo();
+        // Do not force progress update here; let the interval handle it
+      }
+    }
+  };
+  
+  const handlePrev = () => {
+    if (player) {
+      const currentIndex = player.getPlaylistIndex();
+      const playlistLength = playlistDurations.length;
+      // Only skip if not at the start of playlist
+      if (playlistLength > 0 && currentIndex > 0) {
+        player.previousVideo();
+        // Do not force progress update here; let the interval handle it
+      }
+    }
+  };
 
   // Event handlers
   const handleCoverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -268,8 +444,66 @@ function App() {
             label={currentLabel} 
             cover={currentCover} 
             bodyColor={currentBodyColor}
-            progress={25}
+            playState={ytPlayState}
+            progress={currentProgress}
           />
+          {/* YouTube Player (hidden) */}
+          <div id="yt-player" ref={playerRef} style={{ width: 0, height: 0, overflow: 'hidden' }} />
+          {/* Playback Controls */}
+          <div className="yt-controls-container">
+            <div className="yt-controls">
+              <button
+                className="yt-skip-btn"
+                onClick={handlePrev}
+                title="Previous"
+                disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === 0}
+                aria-label="Previous"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                  <polygon points="20,5 8,12 20,19" fill="currentColor"/>
+                </svg>
+              </button>
+              {ytPlayState === 'FW' ? (
+                <button
+                  className="yt-play-btn"
+                  onClick={handlePause}
+                  title="Pause"
+                  disabled={!playlistId || !ytReady}
+                  aria-label="Pause"
+                >
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                    <rect x="19" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  className="yt-play-btn"
+                  onClick={handlePlay}
+                  title="Play"
+                  disabled={!playlistId || !ytReady}
+                  aria-label="Play"
+                >
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="10,7 26,16 10,25" fill="currentColor"/>
+                  </svg>
+                </button>
+              )}
+              <button
+                className="yt-skip-btn"
+                onClick={handleNext}
+                title="Next"
+                disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === playlistDurations.length - 1}
+                aria-label="Next"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="18" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                  <polygon points="4,5 16,12 4,19" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

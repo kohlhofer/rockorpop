@@ -59,40 +59,40 @@
 // Forward play (default)
 .tape-fw {
   .tape-reelA {
-    animation: spin-forward 1.5s linear infinite;
+    animation: spin-backward 1.5s linear infinite;
   }
   .tape-reelB {
-    animation: spin-forward 1s linear infinite;
+    animation: spin-backward 1s linear infinite;
   }
 }
 
 // Backward play
 .tape-bw {
   .tape-reelA {
-    animation: spin-backward 1s linear infinite;
+    animation: spin-forward 1s linear infinite;
   }
   .tape-reelB {
-    animation: spin-backward 1.5s linear infinite;
+    animation: spin-forward 1.5s linear infinite;
   }
 }
 
 // Fast forward
 .tape-ffw {
   .tape-reelA {
-    animation: spin-forward 0.75s linear infinite;
+    animation: spin-backward 0.75s linear infinite;
   }
   .tape-reelB {
-    animation: spin-forward 0.5s linear infinite;
+    animation: spin-backward 0.5s linear infinite;
   }
 }
 
 // Fast backward
 .tape-fbw {
   .tape-reelA {
-    animation: spin-backward 0.5s linear infinite;
+    animation: spin-forward 0.5s linear infinite;
   }
   .tape-reelB {
-    animation: spin-backward 0.75s linear infinite;
+    animation: spin-forward 0.75s linear infinite;
   }
 }
 

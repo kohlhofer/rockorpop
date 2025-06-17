@@ -347,8 +347,9 @@ body {
   right: -100%;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(145deg, rgba(245, 242, 232, 0.98), rgba(232, 220, 192, 0.98));
-  backdrop-filter: blur(10px);
+  background: linear-gradient(145deg, rgba(245, 242, 232, 0.60), rgba(232, 220, 192, 0.45));
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
   border-left: 2px solid rgba(139, 125, 107, 0.3);
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
   transition: right 0.3s ease;
@@ -363,7 +364,6 @@ body {
   @media (min-width: 768px) {
     right: -400px;
     width: 400px;
-    
     &.open {
       right: 0;
     }
@@ -1034,4 +1034,79 @@ body {
     align-self: stretch;
     padding: 12px 16px;
   }
+}
+
+.yt-controls-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 0.7rem;
+  background: rgba(20, 20, 20, 0.48);
+  border-radius: 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.13), 0 1.5px 0 rgba(255,255,255,0.06) inset;
+  padding: 0.18rem 0.7rem;
+  width: fit-content;
+  min-width: 0;
+  border: none;
+  backdrop-filter: blur(6px) saturate(1.1);
+}
+
+.yt-controls {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.yt-play-btn, .yt-skip-btn {
+  background: rgba(40, 40, 40, 0.82);
+  color: #fff;
+  border: none;
+  border-radius: 1.2rem;
+  font-size: 1.45rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0.25rem;
+  font-family: inherit;
+  font-weight: bold;
+  box-shadow: 0 1.5px 6px rgba(0,0,0,0.13), 0 1px 0 rgba(255,255,255,0.08) inset;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s, border 0.15s;
+  outline: none;
+  margin: 0 0.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  position: relative;
+  backdrop-filter: blur(1.5px) saturate(1.05);
+  &:hover, &:focus {
+    background: rgba(60, 60, 60, 0.93);
+    color: #fff;
+    box-shadow: 0 2.5px 10px rgba(0,0,0,0.18), 0 1px 0 rgba(255,255,255,0.10) inset;
+  }
+  &:active {
+    background: rgba(20, 20, 20, 0.90);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15) inset;
+  }
+  &:disabled {
+    background: rgba(60, 60, 60, 0.32);
+    color: #bbb;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.6;
+  }
+}
+
+.yt-play-btn {
+  font-size: 1.7rem;
+  width: 2.7rem;
+  height: 2.7rem;
+}
+
+.yt-skip-btn {
+  font-size: 1.1rem;
+  width: 1.7rem;
+  height: 1.7rem;
 } 
