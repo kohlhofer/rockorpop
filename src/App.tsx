@@ -487,6 +487,10 @@ function App() {
       label: 'BOC',
       url: '?cover=4&bg=13&label=BOC&playlist=PL221B13914A7EF3A2',
     },
+    {
+      label: '80s German Synth',
+      url: '?cover=2&shell=9&bg=8&label=80s%20German%20Synth&playlist=PL9NOKG-8bUwqcG2Dd8GUKzwSG3di9mQ1m',
+    },
     // Add more presets here as needed
   ];
 
