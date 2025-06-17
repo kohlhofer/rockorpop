@@ -291,13 +291,16 @@ body {
 
 .demo-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  margin-bottom: 2rem;
-  gap: 2rem;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 80px 20px 20px;
+  position: relative;
+  
+  @media (max-width: 768px) {
+    padding: 72px 16px 16px;
+  }
 }
 
 .cassette-wrapper {
@@ -309,13 +312,13 @@ body {
 }
 
 .edit-btn {
-  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-  border-color: #138496;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border-color: #2980b9;
   color: #ffffff;
 
   &:hover {
-    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
-    border-color: #117a8b;
+    background: linear-gradient(135deg, #2980b9, #2472a4);
+    border-color: #2472a4;
     color: #ffffff;
     transform: translateY(-1px);
     box-shadow: 
@@ -718,119 +721,99 @@ body {
   }
 }
 
-// Top Action Buttons
-.top-left-actions {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+// Top Navigation Bar
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
   display: flex;
-  gap: 12px;
-  z-index: 10;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 2000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+
+  @media (max-width: 768px) {
+    height: 56px;
+    padding: 0 16px;
+  }
 }
 
-.top-right-actions {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+.nav-group {
   display: flex;
   gap: 12px;
-  z-index: 10;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    gap: 8px;
+  }
 }
 
+// Update action buttons to match new design
 .action-btn {
-  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
-  border: 2px solid #343a40;
-  border-radius: 8px;
   padding: 8px 16px;
+  border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  color: #f8f9fa;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  @media (max-width: 768px) {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 
   &:hover {
-    background: linear-gradient(135deg, #343a40 0%, #212529 100%);
+    color: #fff;
     transform: translateY(-1px);
-    box-shadow: 
-      0 4px 8px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 
-      0 1px 2px rgba(0, 0, 0, 0.2),
-      inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.9;
   }
 }
 
+// Share button retains prominent styling
 .share-btn {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  border-color: #0056b3;
-  color: #ffffff;
-
-  &:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-    border-color: #004085;
-    color: #ffffff;
-  }
-}
-
-.preset-dropdown {
-  appearance: none;
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  border: 2px solid #0056b3;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
   color: #fff;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 24px 6px 12px;
-  margin-left: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
-  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
-  cursor: pointer;
-  transition: all 0.2s;
-  width: auto;
-  min-width: 80px;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
-  background-repeat: no-repeat;
-  background-position: right 6px center;
-  background-size: 16px;
-
-  &:hover, &:focus {
-    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-    border-color: #004085;
+  
+  &:hover {
+    background: linear-gradient(135deg, #27ae60, #219a52);
     color: #fff;
-    outline: none;
-  }
-
-  &:active {
-    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-    border-color: #004085;
-    color: #fff;
-  }
-
-  option {
-    color: #222;
-    background: #fff;
-    padding: 8px;
   }
 }
 
-.new-btn {
-  background: linear-gradient(135deg, #6f42c1 0%, #5a2a9a 100%);
-  border-color: #5a2a9a;
-  color: #ffffff;
-
+// Remove specific button gradients
+.edit-btn, .new-btn {
   &:hover {
-    background: linear-gradient(135deg, #5a2a9a 0%, #4a2479 100%);
-    border-color: #4a2479;
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
   }
+}
+
+// Remove old positioning styles
+.top-left-actions, .top-right-actions {
+  position: static;
+  top: auto;
+  left: auto;
+  right: auto;
 }
 
 // Share Dialog

@@ -47,36 +47,25 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
 
   const selected = options.find(opt => opt.value === value);
 
+  const handleSelect = (option: Option) => {
+    onSelect(option.value);
+    setOpen(false);
+  };
+
   return (
     <div className="tape-dropdown" style={{ display: 'inline-block', position: 'relative' }}>
       <button
         ref={buttonRef}
-        className="tape-dropdown-btn action-btn"
+        className="action-btn"
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen(o => !o)}
-        style={{
-          minWidth: 0,
-          padding: '8px 16px',
-          fontSize: 14,
-          fontWeight: 600,
-          borderRadius: 8,
-          border: '2px solid #343a40',
-          background: 'linear-gradient(135deg, #495057 0%, #343a40 100%)',
-          color: '#f8f9fa',
-          cursor: 'pointer',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
-          textShadow: '0 1px 0 rgba(0,0,0,0.3)',
-          position: 'relative',
-          width: 'auto',
-          display: 'inline-flex',
-          alignItems: 'center',
-          marginLeft: 4,
-        }}
       >
-        <span style={{fontWeight: 600}}>{selected ? selected.label : label}</span>
-        <svg style={{ marginLeft: 8 }} width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M7 10l5 5 5-5z"/></svg>
+        <span>{selected ? selected.label : label}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
       </button>
       {open && (
         <ul
@@ -87,77 +76,73 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
           style={{
             position: 'absolute',
             left: 0,
-            top: '100%',
-            marginTop: 4,
-            background: '#fff',
-            border: '1px solid #d1d5db',
-            borderRadius: 10,
-            boxShadow: '0 8px 32px rgba(0,0,0,0.13)',
-            minWidth: '180px',
-            zIndex: 1000,
-            padding: 0,
+            top: 'calc(100% + 8px)',
+            background: 'rgba(30, 30, 30, 0.95)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 12,
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            minWidth: '200px',
+            zIndex: 2001,
+            padding: '6px 0',
+            margin: 0,
             listStyle: 'none',
             overflow: 'hidden',
-            fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
+            color: '#fff',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
           }}
         >
           <li
             style={{
-              padding: '6px 16px 4px 16px',
+              padding: '8px 16px 6px',
               background: 'none',
               fontWeight: 600,
-              color: '#7a7a7a',
+              color: 'rgba(255, 255, 255, 0.5)',
               fontSize: 11,
-              borderBottom: '1px solid #f0f0f0',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
               letterSpacing: '0.08em',
               userSelect: 'none',
               textTransform: 'uppercase',
               textAlign: 'left',
-              opacity: 0.85,
             }}
             tabIndex={-1}
             aria-disabled="true"
           >
             Example tapes
           </li>
-          {options.map(opt => (
+          {options.map((option, i) => (
             <li
-              key={opt.value}
+              key={i}
               role="option"
-              aria-selected={opt.value === value}
+              aria-selected={selected?.value === option.value}
               tabIndex={0}
-              className="tape-dropdown-item"
-              style={{
-                padding: '7px 16px',
-                background: opt.value === value ? '#e6f0ff' : 'transparent',
-                color: '#222',
-                cursor: 'pointer',
-                fontWeight: opt.value === value ? 600 : 400,
-                outline: 'none',
-                borderBottom: '1px solid #f4f4f4',
-                transition: 'background 0.12s',
-                fontSize: 13,
-                textAlign: 'left',
-                borderRadius: 0,
-              }}
-              onClick={() => {
-                onSelect(opt.value);
-                setOpen(false);
-              }}
-              onKeyDown={e => {
+              onClick={() => handleSelect(option)}
+              onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
-                  onSelect(opt.value);
-                  setOpen(false);
+                  e.preventDefault();
+                  handleSelect(option);
                 }
               }}
-              onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.background = '#eaf3ff';
+              style={{
+                padding: '10px 16px',
+                cursor: 'pointer',
+                background: selected?.value === option.value ? 'rgba(255, 255, 255, 0.1)' : 'none',
+                transition: 'all 0.2s ease',
+                fontSize: 14,
+                textAlign: 'left',
+                color: selected?.value === option.value ? '#fff' : 'rgba(255, 255, 255, 0.8)',
               }}
-              onMouseLeave={e => {
-                (e.currentTarget as HTMLElement).style.background = opt.value === value ? '#e6f0ff' : 'transparent';
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                if (selected?.value !== option.value) {
+                  e.currentTarget.style.background = 'none';
+                }
               }}
             >
-              {opt.label}
+              {option.label}
             </li>
           ))}
         </ul>
