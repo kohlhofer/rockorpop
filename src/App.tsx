@@ -140,11 +140,12 @@ function App() {
   const [currentDuration, setCurrentDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [playlistIndex, setPlaylistIndex] = useState(0);
-  const [playlistLength, setPlaylistLength] = useState(0);
+  const [playlistLength, setPlaylistLength] = useState<number>(0);
   const [playlistDurations, setPlaylistDurations] = useState<number[]>([]);
   const progressInterval = useRef<number | null>(null);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
+  const [currentVideoId, setCurrentVideoId] = useState<string>('');
   
   const totalCovers = 5;
   const totalBodyColors = 10;
@@ -201,67 +202,109 @@ function App() {
   // Create or update player when ready or playlist changes
   useEffect(() => {
     if (!ytReady || !playlistId) return;
-    if (player) {
-      // Always load the new playlist when playlistId or videoId changes
-      player.loadPlaylist({
-        list: playlistId,
-        listType: 'playlist',
-        index: 0,
-        suggestedQuality: 'small',
-      });
-      setYtPlayState('STOP');
-      return;
-    }
-    const playerTarget = document.getElementById('yt-player-bar') || document.getElementById('yt-player');
-    const newPlayer = new (window as any).YT.Player(playerTarget, {
-      height: '0',
-      width: '0',
-      playerVars: {
-        listType: 'playlist',
-        list: playlistId,
-        autoplay: 0,
-        controls: 0,
-        modestbranding: 1,
-        rel: 0,
-        showinfo: 0,
-      },
-      events: {
-        onReady: () => {
-          setYtPlayState('STOP');
-          // Get initial playlist info
-          const playlist = newPlayer.getPlaylist();
-          setPlaylistLength(playlist.length);
-          // Get durations for all videos in playlist
-          const durations: number[] = [];
-          playlist.forEach((videoId: string, index: number) => {
-            newPlayer.cueVideoById(videoId);
-            durations[index] = newPlayer.getDuration();
-          });
-          setPlaylistDurations(durations);
-          // Reset to first video
-          newPlayer.playVideoAt(0);
-          newPlayer.pauseVideo();
+    
+    const initializePlayer = () => {
+      const playerTarget = document.getElementById('yt-player-bar') || document.getElementById('yt-player');
+      const newPlayer = new (window as any).YT.Player(playerTarget, {
+        height: '0',
+        width: '0',
+        playerVars: {
+          listType: 'playlist',
+          list: playlistId,
+          autoplay: 0,
+          controls: 0,
+          modestbranding: 1,
+          rel: 0,
+          showinfo: 0,
         },
-        onStateChange: (event: any) => {
-          if (event.data === 1) { // Playing
-            setYtPlayState('FW');
-            startProgressTracking();
-          } else { // Paused or ended
+        events: {
+          onReady: (event: any) => {
+            const player = event.target;
+            setPlayer(player);
             setYtPlayState('STOP');
-            stopProgressTracking();
+            
+            // Get initial playlist info
+            const playlist = player.getPlaylist();
+            if (playlist) {
+              setPlaylistLength(playlist.length);
+              
+              // Get current track info
+              const currentIndex = player.getPlaylistIndex();
+              setCurrentTrackIndex(currentIndex);
+              
+              // Get video data
+              const videoData = player.getVideoData();
+              if (videoData) {
+                setCurrentVideoTitle(videoData.title || '');
+                setCurrentVideoId(videoData.video_id || '');
+              }
+              
+              // Initialize durations array
+              const durations: number[] = new Array(playlist.length).fill(0);
+              setPlaylistDurations(durations);
+              
+              // Reset to first video and pause
+              player.playVideoAt(0);
+              player.pauseVideo();
+            }
+          },
+          onStateChange: (event: any) => {
+            const PlayerState = (window as any).YT.PlayerState;
+            if (event.data === PlayerState.PLAYING) {
+              setYtPlayState('FW');
+              startProgressTracking();
+            } else {
+              setYtPlayState('STOP');
+              stopProgressTracking();
+            }
+            
+            // Update video info on state change
+            const player = event.target;
+            const videoData = player.getVideoData();
+            if (videoData) {
+              setCurrentVideoTitle(videoData.title || '');
+              setCurrentVideoId(videoData.video_id || '');
+              setCurrentTrackIndex(player.getPlaylistIndex());
+            }
+          },
+          onError: (event: any) => {
+            console.error('YouTube player error:', event.data);
           }
         },
-        onPlaybackRateChange: (event: any) => {
-          stopProgressTracking();
-          if (event.data > 0) {
-            startProgressTracking();
-          }
+      });
+    };
+
+    if (player) {
+      // If player exists, just load the new playlist
+      try {
+        player.loadPlaylist({
+          list: playlistId,
+          listType: 'playlist',
+          index: 0,
+          suggestedQuality: 'small',
+        });
+        setYtPlayState('STOP');
+      } catch (e) {
+        console.error('Error loading playlist:', e);
+        // If loading fails, reinitialize the player
+        initializePlayer();
+      }
+    } else {
+      // Initialize new player
+      initializePlayer();
+    }
+
+    // Cleanup function
+    return () => {
+      if (player) {
+        try {
+          player.destroy();
+        } catch (e) {
+          console.error('Error destroying player:', e);
         }
-      },
-    });
-    setPlayer(newPlayer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ytReady, playlistId, videoId, playlistUrl]);
+      }
+    };
+  }, [ytReady, playlistId]);
 
   // Calculate total playlist duration
   const getTotalPlaylistDuration = () => {
@@ -326,29 +369,38 @@ function App() {
     }
   };
   
-  const handleNext = () => {
-    if (!player) return;
-    try {
-      player.nextVideo();
-      setTimeout(() => {
-        const index = player.getPlaylistIndex();
-        setCurrentTrackIndex(index);
-      }, 100);
-    } catch (e) {
-      console.log('Error handling next:', e);
-    }
-  };
-  
   const handlePrev = () => {
     if (!player) return;
     try {
-      player.previousVideo();
-      setTimeout(() => {
-        const index = player.getPlaylistIndex();
-        setCurrentTrackIndex(index);
-      }, 100);
+      const currentIndex = player.getPlaylistIndex();
+      if (currentIndex > 0) {
+        player.previousVideo();
+        setCurrentTrackIndex(currentIndex - 1);
+        // Update video info immediately
+        const videoData = player.getVideoData();
+        setCurrentVideoTitle(videoData?.title || '');
+        setCurrentVideoId(videoData?.video_id || '');
+      }
     } catch (e) {
       console.log('Error handling prev:', e);
+    }
+  };
+  
+  const handleNext = () => {
+    if (!player) return;
+    try {
+      const currentIndex = player.getPlaylistIndex();
+      const playlistLength = player.getPlaylist()?.length || 0;
+      if (currentIndex < playlistLength - 1) {
+        player.nextVideo();
+        setCurrentTrackIndex(currentIndex + 1);
+        // Update video info immediately
+        const videoData = player.getVideoData();
+        setCurrentVideoTitle(videoData?.title || '');
+        setCurrentVideoId(videoData?.video_id || '');
+      }
+    } catch (e) {
+      console.log('Error handling next:', e);
     }
   };
 
@@ -420,48 +472,19 @@ function App() {
     setConfigPanelOpen(true);
   };
 
-  // Update video info when track changes
-  useEffect(() => {
+  const handleYouTubeClick = () => {
     if (!player) return;
-    
-    const updateVideoInfo = () => {
-      try {
-        // Get current video data
-        const videoData = player.getVideoData();
-        const title = videoData?.title || '';
-        setCurrentVideoTitle(title);
-
-        // Get playlist info
-        const playlist = player.getPlaylist();
-        if (playlist) {
-          const index = player.getPlaylistIndex();
-          setCurrentTrackIndex(index);
-          setPlaylistLength(playlist.length);
-        }
-      } catch (e) {
-        console.log('Error updating video info:', e);
+    try {
+      const videoData = player.getVideoData();
+      const videoId = videoData?.video_id;
+      if (videoId) {
+        const url = `https://www.youtube.com/watch?v=${videoId}&list=${playlistId}`;
+        window.open(url, '_blank');
       }
-    };
-
-    // Update info when player state changes
-    const handleStateChange = (event: any) => {
-      const PlayerState = (window as any).YT.PlayerState;
-      if (event.data === PlayerState.PLAYING || 
-          event.data === PlayerState.PAUSED || 
-          event.data === PlayerState.ENDED) {
-        updateVideoInfo();
-      }
-    };
-
-    player.addEventListener('onStateChange', handleStateChange);
-    
-    // Initial update
-    setTimeout(updateVideoInfo, 1000); // Give player time to initialize
-
-    return () => {
-      player.removeEventListener('onStateChange', handleStateChange);
-    };
-  }, [player]);
+    } catch (e) {
+      console.log('Error opening YouTube:', e);
+    }
+  };
 
   return (
     <div className={`app background-${currentBackground}`}>
@@ -710,7 +733,7 @@ function App() {
             </div>
           </div>
         </div>
-        <div className="yt-bottom-bar-thumb">
+        <div className="yt-bottom-bar-thumb" onClick={handleYouTubeClick}>
           <div className="yt-thumb-video">
             <div id="yt-player-bar" />
           </div>
