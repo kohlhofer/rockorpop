@@ -10,13 +10,21 @@ function App() {
   const [currentBodyColor, setCurrentBodyColor] = useState<number>(1);
   const [currentLabel, setCurrentLabel] = useState<string>('This tape is for you');
   const [progress, setProgress] = useState<number>(25);
+  const [currentBackground, setCurrentBackground] = useState<number>(1);
   
   const totalCovers = 5;
   const totalBodyColors = 10;
+  const totalBackgrounds = 15;
   
   const bodyColorNames = [
     'Blue', 'Orange', 'Dark Grey', 'Light Grey', 
     'Grass Green', 'Cheerful Yellow', 'Red', 'Purple', 'Pink', 'Cream'
+  ];
+
+  const backgroundNames = [
+    'Default', 'Checkerboard', 'Diagonal Stripes', 'Pride', 'Psychedelic',
+    'Wood Grain', 'Denim', 'Neon Grid', 'Notebook Paper', 'Vinyl Records',
+    'Soft Lavender', 'Warm Cream', 'Isometric Cubes', 'Dot Grid', 'Graph Paper'
   ];
 
   const defaultLabels = [
@@ -40,9 +48,14 @@ function App() {
     setCurrentBodyColor(colorNumber);
   };
 
+  const goToBackground = (backgroundNumber: number) => {
+    setCurrentBackground(backgroundNumber);
+  };
+
   const randomizeAll = () => {
     setCurrentCover(Math.floor(Math.random() * totalCovers) + 1);
     setCurrentBodyColor(Math.floor(Math.random() * totalBodyColors) + 1);
+    setCurrentBackground(Math.floor(Math.random() * totalBackgrounds) + 1);
     setCurrentLabel(defaultLabels[Math.floor(Math.random() * defaultLabels.length)]);
     setProgress(Math.floor(Math.random() * 101)); // 0-100
     // Keep current play state - don't randomize that
@@ -57,8 +70,7 @@ function App() {
   };
 
   return (
-    <div className="app">
-      <h1>Cassette Component Demo</h1>
+    <div className={`app background-${currentBackground}`}>
       <div className="demo-container">
         <div className="cassette-wrapper">
           <Cassette 
@@ -108,6 +120,19 @@ function App() {
                 title={bodyColorNames[colorNum - 1]}
               >
                 {colorNum}
+              </button>
+            ))}
+          </div>
+          <div className="background-indicators">
+            <h3>Background</h3>
+            {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
+              <button
+                key={bgNum}
+                className={`bg-indicator ${currentBackground === bgNum ? 'active' : ''}`}
+                onClick={() => goToBackground(bgNum)}
+                title={backgroundNames[bgNum - 1]}
+              >
+                {bgNum}
               </button>
             ))}
           </div>

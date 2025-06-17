@@ -58,6 +58,7 @@ body {
   justify-content: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   position: relative;
+  transition: background 0.3s ease;
 
   h1 {
     margin-bottom: 2rem;
@@ -66,6 +67,224 @@ body {
     font-size: 2.5rem;
     font-weight: 300;
     letter-spacing: 0.5px;
+  }
+
+  &.background-1 {
+    // Default - keep existing gradient
+  }
+  
+  &.background-2 {
+    // Checkerboard - using Light Grey and Cream
+    background-image: 
+      linear-gradient(45deg, #D0C5B8 25%, transparent 25%), 
+      linear-gradient(-45deg, #D0C5B8 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #D0C5B8 75%), 
+      linear-gradient(-45deg, transparent 75%, #D0C5B8 75%);
+    background-size: 120px 120px;
+    background-position: 0 0, 0 60px, 60px -60px, -60px 0px;
+    background-color: #F5F0E8;
+  }
+  
+  &.background-3 {
+    // Big Diagonal Stripes - using Orange and Red tones
+    background: repeating-linear-gradient(
+      45deg,
+      #FF6C24,
+      #FF6C24 40px,
+      #DF4900 40px,
+      #DF4900 80px,
+      #F44336 80px,
+      #F44336 120px,
+      #D32F2F 120px,
+      #D32F2F 160px
+    );
+  }
+  
+  &.background-4 {
+    // Pride - using our vibrant shell colors with white fade gradient
+    background: 
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.7) 80%,
+        rgba(255, 255, 255, 0.95) 100%
+      ),
+      linear-gradient(
+        to right,
+        #F44336 0%, #F44336 16.66%,
+        #FF6C24 16.66%, #FF6C24 33.33%,
+        #FFD54F 33.33%, #FFD54F 50%,
+        #4CAF50 50%, #4CAF50 66.66%,
+        #0E9DCC 66.66%, #0E9DCC 83.33%,
+        #7B1FA2 83.33%, #7B1FA2 100%
+      );
+  }
+  
+  &.background-5 {
+    // Psychedelic - using Pink, Purple, and Blue (fixed background)
+    background: radial-gradient(circle at 20% 50%, #F48FB1 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, #7B1FA2 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, #0E9DCC 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, #FFD54F 0%, transparent 50%),
+                radial-gradient(circle at 80% 100%, #FF6C24 0%, transparent 50%),
+                linear-gradient(135deg, #F48FB1, #7B1FA2, #0E9DCC);
+    background-attachment: fixed;
+    animation: psychedelic 10s ease-in-out infinite alternate;
+  }
+  
+  &.background-6 {
+    // Scottish Tartan - muted shell colors
+    background-color: #F5F0E8;
+    background-image: 
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 15px,
+        rgba(14, 157, 204, 0.4) 15px,
+        rgba(14, 157, 204, 0.4) 25px,
+        transparent 25px,
+        transparent 45px,
+        rgba(76, 175, 80, 0.4) 45px,
+        rgba(76, 175, 80, 0.4) 65px,
+        transparent 65px,
+        transparent 75px,
+        rgba(244, 67, 54, 0.5) 75px,
+        rgba(244, 67, 54, 0.5) 80px,
+        transparent 80px,
+        transparent 100px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 12px,
+        rgba(255, 108, 36, 0.4) 12px,
+        rgba(255, 108, 36, 0.4) 28px,
+        transparent 28px,
+        transparent 50px,
+        rgba(123, 31, 162, 0.4) 50px,
+        rgba(123, 31, 162, 0.4) 70px,
+        transparent 70px,
+        transparent 85px,
+        rgba(255, 213, 79, 0.4) 85px,
+        rgba(255, 213, 79, 0.4) 90px,
+        transparent 90px,
+        transparent 100px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        rgba(167, 167, 167, 0.2) 0px,
+        rgba(167, 167, 167, 0.2) 3px,
+        transparent 3px,
+        transparent 20px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(131, 131, 131, 0.2) 0px,
+        rgba(131, 131, 131, 0.2) 2px,
+        transparent 2px,
+        transparent 15px
+      );
+  }
+  
+  &.background-7 {
+    // Denim - using Blue tones
+    background-color: #0E9DCC;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0),
+      linear-gradient(45deg, rgba(0,128,170,0.3) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(0,128,170,0.3) 25%, transparent 25%);
+    background-size: 20px 20px, 40px 40px, 40px 40px;
+  }
+  
+  &.background-8 {
+    // Neon Grid - using Green and Purple
+    background-color: #1a1a1a;
+    background-image: 
+      linear-gradient(rgba(76, 175, 80, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(123, 31, 162, 0.3) 1px, transparent 1px);
+    background-size: 50px 50px;
+    box-shadow: inset 0 0 100px rgba(76, 175, 80, 0.1);
+  }
+  
+  &.background-9 {
+    // Notebook Paper - school lined paper
+    background-color: #fefefe;
+    background-image: 
+      linear-gradient(90deg, transparent 24px, #F44336 24px, #F44336 25px, transparent 25px),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 23px,
+        rgba(14, 157, 204, 0.3) 23px,
+        rgba(14, 157, 204, 0.3) 24px,
+        transparent 24px,
+        transparent 47px
+      );
+    background-size: 100% 100%, 100% 24px;
+  }
+  
+  &.background-10 {
+    // Vinyl Records - using Dark Grey base
+    background-color: #4B4B4B;
+    background-image: 
+      radial-gradient(circle at 50% 50%, transparent 20px, rgba(167,167,167,0.2) 21px, rgba(167,167,167,0.2) 22px, transparent 23px),
+      radial-gradient(circle at 50% 50%, transparent 40px, rgba(167,167,167,0.1) 41px, rgba(167,167,167,0.1) 42px, transparent 43px),
+      radial-gradient(circle at 50% 50%, transparent 60px, rgba(167,167,167,0.1) 61px, rgba(167,167,167,0.1) 62px, transparent 63px);
+    background-size: 120px 120px;
+    background-position: 0 0, 60px 60px, 30px 30px;
+  }
+  
+  &.background-11 {
+    // Soft Lavender - neutral pastel
+    background: linear-gradient(
+      135deg,
+      #f3f0ff 0%,
+      #e8e2ff 50%,
+      #f0ebff 100%
+    );
+  }
+  
+  &.background-12 {
+    // Warm Cream - neutral pastel using shell colors
+    background: linear-gradient(
+      45deg,
+      #F5F0E8 0%,
+      #F8F3EB 50%,
+      #FAF5EE 100%
+    );
+  }
+  
+  &.background-13 {
+    // Isometric Cubes - 3D geometric pattern (low contrast)
+    background-color: #F5F0E8;
+    background-image: 
+      linear-gradient(30deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
+      linear-gradient(150deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
+      linear-gradient(30deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
+      linear-gradient(150deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
+      linear-gradient(60deg, #D0C5B8 25%, transparent 25.5%, transparent 75%, #D0C5B8 75%, #D0C5B8),
+      linear-gradient(60deg, #D0C5B8 25%, transparent 25.5%, transparent 75%, #D0C5B8 75%, #D0C5B8);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  }
+  
+  &.background-14 {
+    // Dot Grid - notebook style
+    background-color: #fefefe;
+    background-image: 
+      radial-gradient(circle at 1px 1px, rgba(14, 157, 204, 0.4) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+  
+  &.background-15 {
+    // Graph Paper - notebook style squares
+    background-color: #fefefe;
+    background-image: 
+      linear-gradient(rgba(14, 157, 204, 0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(14, 157, 204, 0.3) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
 }
 
@@ -385,4 +604,51 @@ body {
       font-style: italic;
     }
   }
+}
+
+.background-indicators {
+  margin-top: 20px;
+  
+  h3 {
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 200px;
+  
+  .bg-indicator {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #ddd;
+    background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    
+    &:hover {
+      transform: scale(1.1);
+      border-color: #999;
+    }
+    
+    &.active {
+      border-color: #4CAF50;
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      color: white;
+      transform: scale(1.1);
+    }
+  }
+}
+
+@keyframes psychedelic {
+  0% { filter: hue-rotate(0deg) saturate(1); }
+  50% { filter: hue-rotate(180deg) saturate(1.5); }
+  100% { filter: hue-rotate(360deg) saturate(1); }
 } 
