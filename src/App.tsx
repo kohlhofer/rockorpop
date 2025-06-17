@@ -206,10 +206,10 @@ function App() {
     if (!ytReady || !playlistId) return;
     
     const initializePlayer = () => {
-      const playerTarget = document.getElementById('yt-player-bar') || document.getElementById('yt-player');
+      const playerTarget = playerRef.current;
       const newPlayer = new (window as any).YT.Player(playerTarget, {
-        height: '0',
-        width: '0',
+        height: '200',
+        width: '356',
         playerVars: {
           listType: 'playlist',
           list: playlistId,
@@ -559,8 +559,10 @@ function App() {
             playState={ytPlayState}
             progress={currentProgress}
           />
-          {/* YouTube Player (hidden) */}
-          <div id="yt-player" ref={playerRef} style={{ width: 0, height: 0, overflow: 'hidden' }} key={playerResetKey} />
+          {/* YouTube Player (visible, fixed at bottom right) */}
+          <div className="youtube-container">
+            <div id="yt-player-bar" ref={playerRef} />
+          </div>
           {/* Playback Controls */}
           <div className="yt-controls-container">
             <div className="yt-controls">
@@ -774,9 +776,10 @@ function App() {
             </div>
           </div>
         </div>
+        {/* Optionally, show a static thumbnail or icon here for compliance */}
         <div className="yt-bottom-bar-thumb" onClick={handleYouTubeClick}>
           <div className="yt-thumb-video">
-            <div id="yt-player-bar" />
+            {/* You could render a static image or YouTube logo here */}
           </div>
         </div>
       </div>
