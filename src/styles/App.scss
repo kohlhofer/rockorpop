@@ -337,8 +337,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px);
+  background: rgba(0, 0, 0, 0.18);
+  backdrop-filter: none;
   z-index: 2000;
 }
 
@@ -358,6 +358,7 @@ body {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  border-radius: 0;
   
   &.open {
     right: 0;
@@ -1006,32 +1007,28 @@ body {
 
 .bookmark-note {
   margin: 0;
-  padding: 1.25rem;
-  background: linear-gradient(145deg, rgba(107, 91, 79, 0.15), rgba(74, 63, 54, 0.1));
-  border-top: 1px solid rgba(107, 91, 79, 0.2);
-  border-radius: 0;
-  box-shadow: 
-    inset 0 1px 0 rgba(0, 0, 0, 0.1),
-    0 -2px 4px rgba(0, 0, 0, 0.05);
   margin-top: auto;
-
-  @media (max-width: 767px) {
-    padding: 1rem;
-  }
+  padding: 0;
+  padding-bottom: 1rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: left;
 
   p {
     margin: 0;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: #4a3f36;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
-
-    @media (max-width: 767px) {
-      font-size: 0.8rem;
-    }
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: #3a2e1a;
+    text-shadow: none;
+    font-weight: 400;
+    letter-spacing: 0.01em;
 
     strong {
-      color: #2d2419;
+      color: #3a2e1a;
       font-weight: 600;
     }
   }
