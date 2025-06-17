@@ -123,7 +123,7 @@ body {
   }
   
   &.background-5 {
-    // Psychedelic - using Pink, Purple, and Blue (fixed background)
+    // Psychedelic - using Pink, Purple, and Blue (smoothly animated background colors)
     background: radial-gradient(circle at 20% 50%, #F48FB1 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, #7B1FA2 0%, transparent 50%),
                 radial-gradient(circle at 40% 80%, #0E9DCC 0%, transparent 50%),
@@ -131,7 +131,8 @@ body {
                 radial-gradient(circle at 80% 100%, #FF6C24 0%, transparent 50%),
                 linear-gradient(135deg, #F48FB1, #7B1FA2, #0E9DCC);
     background-attachment: fixed;
-    animation: psychedelic 10s ease-in-out infinite alternate;
+    background-size: 200% 200%;
+    animation: psychedelicSmooth 12s ease-in-out infinite;
   }
   
   &.background-6 {
@@ -308,48 +309,25 @@ body {
 }
 
 .edit-btn {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(145deg, #6b5b4f, #4a3f36);
-  color: #f5f2e8;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 3px 6px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  z-index: 10;
-
-  // Mobile touch targets and positioning
-  @media (max-width: 767px) {
-    top: -12px;
-    right: -12px;
-    width: 44px;
-    height: 44px;
-    font-size: 16px;
-  }
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+  border-color: #138496;
+  color: #ffffff;
 
   &:hover {
-    background: linear-gradient(145deg, #4a3f36, #3d342b);
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+    border-color: #117a8b;
+    color: #ffffff;
+    transform: translateY(-1px);
     box-shadow: 
-      0 4px 8px rgba(0, 0, 0, 0.2),
+      0 4px 8px rgba(0, 0, 0, 0.25),
       inset 0 1px 0 rgba(255, 255, 255, 0.15);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(0);
     box-shadow: 
-      0 2px 4px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 3px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -366,21 +344,21 @@ body {
 .side-panel {
   position: fixed;
   top: 0;
-  right: -100vw;
+  right: -100%;
   width: 100vw;
   height: 100vh;
   background: linear-gradient(145deg, rgba(245, 242, 232, 0.98), rgba(232, 220, 192, 0.98));
   backdrop-filter: blur(10px);
   border-left: 2px solid rgba(139, 125, 107, 0.3);
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
-  z-index: 101;
   transition: right 0.3s ease;
+  z-index: 101;
   overflow-y: auto;
-  
+
   &.open {
     right: 0;
   }
-  
+
   // Tablet and larger screens
   @media (min-width: 768px) {
     right: -400px;
@@ -390,94 +368,110 @@ body {
       right: 0;
     }
   }
-  
+
   // Large screens
   @media (min-width: 1200px) {
     right: -450px;
     width: 450px;
   }
-  
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid rgba(139, 125, 107, 0.2);
-    background: linear-gradient(145deg, rgba(245, 242, 232, 0.95), rgba(232, 220, 192, 0.95));
-    
-    // Mobile adjustments
-    @media (max-width: 767px) {
-      padding: 0.75rem 1rem;
-    }
-    
-    h2 {
-      margin: 0;
-      color: #4a3f36;
-      font-size: 1.1rem;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-      
-      // Mobile adjustments
-      @media (max-width: 767px) {
-        font-size: 1rem;
-      }
-    }
-    
-    .close-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: none;
-      background: linear-gradient(145deg, #6b5b4f, #4a3f36);
-      color: #f5f2e8;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
 
-      // Mobile touch target
-      @media (max-width: 767px) {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
-      }
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  color: #6b5b4f;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 
-      &:hover {
-        background: linear-gradient(145deg, #4a3f36, #3d342b);
-        transform: scale(1.05);
-        box-shadow: 
-          0 3px 6px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      }
-
-      &:active {
-        transform: scale(0.95);
-        box-shadow: 
-          0 1px 2px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.05);
-      }
-    }
+  // Mobile touch target
+  @media (max-width: 767px) {
+    width: 36px;
+    height: 36px;
+    font-size: 20px;
   }
-  
-  .panel-content {
-    padding: 1rem;
-    
-    // Mobile adjustments
-    @media (max-width: 767px) {
-      padding: 0.75rem;
-    }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(139, 125, 107, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 1);
+    border-color: rgba(139, 125, 107, 0.6);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 }
 
-@keyframes psychedelic {
-  0% { filter: hue-rotate(0deg) saturate(1); }
-  50% { filter: hue-rotate(180deg) saturate(1.5); }
-  100% { filter: hue-rotate(360deg) saturate(1); }
+.panel-content {
+  padding: 3rem 1rem 1rem;
+  
+  // Mobile adjustments
+  @media (max-width: 767px) {
+    padding: 3rem 0.75rem 0.75rem;
+  }
+}
+
+@keyframes psychedelicSmooth {
+  0% { 
+    background-position: 0% 0%, 100% 0%, 50% 100%, 0% 100%, 100% 100%, 0% 0%;
+    background: radial-gradient(ellipse at 20% 50%, #F48FB1 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, #7B1FA2 0%, transparent 60%),
+                radial-gradient(ellipse at 40% 80%, #0E9DCC 0%, transparent 60%),
+                radial-gradient(ellipse at 60% 10%, #FFD54F 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 90%, #FF6C24 0%, transparent 60%),
+                linear-gradient(135deg, rgba(244, 143, 177, 0.3), rgba(123, 31, 162, 0.3), rgba(14, 157, 204, 0.3));
+  }
+  25% { 
+    background-position: 25% 25%, 75% 25%, 25% 75%, 75% 75%, 50% 50%, 25% 25%;
+    background: radial-gradient(ellipse at 30% 60%, #FF6C24 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, #0E9DCC 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 70%, #FFD54F 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 20%, #F48FB1 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 80%, #7B1FA2 0%, transparent 60%),
+                linear-gradient(225deg, rgba(255, 108, 36, 0.3), rgba(14, 157, 204, 0.3), rgba(255, 213, 79, 0.3));
+  }
+  50% { 
+    background-position: 50% 50%, 50% 50%, 0% 100%, 100% 0%, 0% 0%, 50% 50%;
+    background: radial-gradient(ellipse at 40% 70%, #7B1FA2 0%, transparent 60%),
+                radial-gradient(ellipse at 60% 40%, #FFD54F 0%, transparent 60%),
+                radial-gradient(ellipse at 60% 60%, #F48FB1 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 30%, #0E9DCC 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 70%, #FF6C24 0%, transparent 60%),
+                linear-gradient(315deg, rgba(123, 31, 162, 0.3), rgba(255, 213, 79, 0.3), rgba(244, 143, 177, 0.3));
+  }
+  75% { 
+    background-position: 75% 75%, 25% 75%, 75% 25%, 25% 25%, 50% 50%, 75% 75%;
+    background: radial-gradient(ellipse at 50% 80%, #FFD54F 0%, transparent 60%),
+                radial-gradient(ellipse at 50% 20%, #F48FB1 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 50%, #7B1FA2 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 40%, #FF6C24 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 60%, #0E9DCC 0%, transparent 60%),
+                linear-gradient(45deg, rgba(255, 213, 79, 0.3), rgba(244, 143, 177, 0.3), rgba(123, 31, 162, 0.3));
+  }
+  100% { 
+    background-position: 100% 100%, 0% 100%, 50% 0%, 100% 0%, 0% 0%, 100% 100%;
+    background: radial-gradient(ellipse at 20% 50%, #F48FB1 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, #7B1FA2 0%, transparent 60%),
+                radial-gradient(ellipse at 40% 80%, #0E9DCC 0%, transparent 60%),
+                radial-gradient(ellipse at 60% 10%, #FFD54F 0%, transparent 60%),
+                radial-gradient(ellipse at 10% 90%, #FF6C24 0%, transparent 60%),
+                linear-gradient(135deg, rgba(244, 143, 177, 0.3), rgba(123, 31, 162, 0.3), rgba(14, 157, 204, 0.3));
+  }
 }
 
 .content-section {
@@ -487,13 +481,15 @@ body {
     margin-bottom: 1.5rem;
   }
   
-  h3 {
+  label {
+    display: block;
     margin: 0 0 0.75rem 0;
     color: #4a3f36;
     font-size: 1rem;
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
     text-align: left;
+    cursor: pointer;
     
     @media (max-width: 767px) {
       font-size: 0.95rem;
@@ -707,5 +703,335 @@ body {
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
       transform: scale(1.1);
     }
+  }
+}
+
+// Top Action Buttons
+.top-left-actions {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.top-right-actions {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 12px;
+  z-index: 10;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+  border: 2px solid #343a40;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: #f8f9fa;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #343a40 0%, #212529 100%);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.share-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border-color: #0056b3;
+  color: #ffffff;
+
+  &:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    border-color: #004085;
+    color: #ffffff;
+  }
+}
+
+.new-btn {
+  background: linear-gradient(135deg, #6f42c1 0%, #5a2a9a 100%);
+  border-color: #5a2a9a;
+  color: #ffffff;
+
+  &:hover {
+    background: linear-gradient(135deg, #5a2a9a 0%, #4a2479 100%);
+    border-color: #4a2479;
+    color: #ffffff;
+  }
+}
+
+// Share Dialog
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.share-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border: 2px solid #6c757d;
+  border-radius: 12px;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  z-index: 1001;
+  width: 90%;
+  max-width: 500px;
+  animation: dialogSlideIn 0.2s ease-out;
+}
+
+@keyframes dialogSlideIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.dialog-header {
+  position: relative;
+  padding: 20px 24px 16px;
+  border-bottom: 2px solid #dee2e6;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 10px 10px 0 0;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #495057;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+    padding-right: 40px; // Add space for close button
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    color: #495057;
+    padding: 6px 8px;
+    transition: all 0.2s ease;
+    font-weight: bold;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(108, 117, 125, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    &:active {
+      transform: translateY(0);
+      background: rgba(255, 255, 255, 1);
+      border-color: rgba(108, 117, 125, 0.6);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.dialog-content {
+  padding: 20px 24px 24px;
+
+  p {
+    margin: 0 0 16px;
+    color: #495057;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .share-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: #6c757d;
+    font-style: italic;
+  }
+}
+
+.url-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid #ced4da;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  color: #495057;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &:focus {
+    outline: none;
+    border-color: #007bff;
+    background: #ffffff;
+    box-shadow: 
+      inset 0 1px 3px rgba(0, 0, 0, 0.1),
+      0 0 0 3px rgba(0, 123, 255, 0.1);
+  }
+}
+
+.copy-btn {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  border: 2px solid #0056b3;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    transform: translateY(-1px);
+    box-shadow: 
+      0 4px 8px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 1px 2px rgba(0, 0, 0, 0.1),
+      inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  &.success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border-color: #1e7e34;
+    
+    &:hover {
+      background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+    }
+  }
+}
+
+.bookmark-note {
+  margin: 0;
+  padding: 1.25rem;
+  background: linear-gradient(145deg, rgba(107, 91, 79, 0.15), rgba(74, 63, 54, 0.1));
+  border-top: 1px solid rgba(107, 91, 79, 0.2);
+  border-radius: 0;
+  box-shadow: 
+    inset 0 1px 0 rgba(0, 0, 0, 0.1),
+    0 -2px 4px rgba(0, 0, 0, 0.05);
+  margin-top: auto;
+
+  @media (max-width: 767px) {
+    padding: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #4a3f36;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+
+    @media (max-width: 767px) {
+      font-size: 0.8rem;
+    }
+
+    strong {
+      color: #2d2419;
+      font-weight: 600;
+    }
+  }
+}
+
+// Mobile responsive styles
+@media (max-width: 768px) {
+  .top-left-actions {
+    top: 16px;
+    left: 16px;
+    gap: 8px;
+  }
+
+  .top-right-actions {
+    top: 16px;
+    right: 16px;
+    gap: 8px;
+  }
+
+  .action-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .share-dialog {
+    width: 95%;
+    margin: 16px;
+  }
+
+  .dialog-header {
+    padding: 16px 20px 12px;
+
+    h3 {
+      font-size: 16px;
+    }
+  }
+
+  .dialog-content {
+    padding: 16px 20px 20px;
+  }
+
+  .url-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .url-input {
+    font-size: 13px;
+  }
+
+  .copy-btn {
+    align-self: stretch;
+    padding: 12px 16px;
   }
 } 
