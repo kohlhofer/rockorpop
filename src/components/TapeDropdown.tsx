@@ -39,7 +39,7 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
     <div className="relative inline-block">
       <button
         ref={buttonRef}
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-black/50 hover:bg-black/60 shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)] transition-all duration-200"
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -53,18 +53,18 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
       {open && (
         <div
           ref={dropdownRef}
-          className="absolute left-0 mt-2 w-56 rounded-lg bg-[rgba(30,30,30,0.95)] backdrop-blur-lg backdrop-saturate-[1.2] shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+          className="absolute left-0 mt-2 w-56 rounded-lg bg-black/90 shadow-[0_4px_20px_rgba(0,0,0,0.3)] ring-1 ring-white/20 z-50"
           role="listbox"
         >
           <div className="py-1">
-            <div className="px-4 py-2 text-xs font-medium text-white/50 uppercase tracking-wider">
+            <div className="px-4 py-2 text-xs font-bold text-white/80 uppercase tracking-wider">
               Example tapes
             </div>
             {options.map((option) => (
               <button
                 key={option.value}
-                className={`block w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors duration-150
-                  ${option.value === value ? 'text-white font-medium' : 'text-white/80'}`}
+                className={`block w-full text-left px-4 py-2 text-sm hover:bg-white/15 transition-colors duration-150
+                  ${option.value === value ? 'text-white font-bold' : 'text-white'}`}
                 onClick={() => {
                   onSelect(option.value);
                   setOpen(false);

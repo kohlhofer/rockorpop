@@ -503,11 +503,11 @@ function App() {
   return (
     <div className={`app background-${currentBackground}`}>
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 md:h-[64px] bg-[rgba(20,20,20,0.85)] backdrop-blur-lg backdrop-saturate-[1.2] flex items-center justify-between px-4 md:px-5 z-[2000] shadow-lg">
+      <nav className="fixed top-0 left-0 right-0 h-16 md:h-[64px] flex items-center justify-between px-4 md:px-5 z-[2000]">
         <div className="flex items-center gap-3">
           <button 
             onClick={handleShareTape}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white bg-gradient-to-br from-[#2ecc71] to-[#27ae60] hover:from-[#27ae60] hover:to-[#219a52] transition-all duration-200"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-gradient-to-br from-[#2ecc71] to-[#27ae60] hover:from-[#27ae60] hover:to-[#219a52] shadow-[0_2px_8px_rgba(46,204,113,0.25)] hover:shadow-[0_4px_12px_rgba(46,204,113,0.35)] transition-all duration-200"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
@@ -524,7 +524,7 @@ function App() {
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setConfigPanelOpen(!configPanelOpen)}
-            className="px-4 py-2 text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
+            className="px-4 py-2 rounded-lg text-sm font-bold text-white bg-black/50 hover:bg-black/60 shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)] transition-all duration-200"
           >
             Make a tape...
           </button>
@@ -627,7 +627,7 @@ function App() {
 
           {/* Video Player */}
           {playlistId && (
-            <div className="w-full flex justify-center bg-black pb-10">
+            <div className="w-full flex justify-center bg-black pt-5 pb-10">
               <div className="w-full max-w-[356px] aspect-video">
                 <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
               </div>
@@ -814,29 +814,36 @@ function App() {
       {/* Share Dialog */}
       {shareDialogOpen && (
         <>
-          <div className="dialog-overlay" onClick={() => setShareDialogOpen(false)} />
-          <div className="share-dialog">
-            <div className="dialog-header">
-              <h3>Share your tape</h3>
+          <div 
+            className="fixed inset-0 bg-black/50 z-[2001]" 
+            onClick={() => setShareDialogOpen(false)} 
+          />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl z-[2002] overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Share your tape</h3>
               <button 
-                className="close-btn" 
                 onClick={() => setShareDialogOpen(false)}
+                className="text-gray-500 hover:text-gray-700 transition-colors"
                 title="Close"
               >
                 ✕
               </button>
             </div>
-            <div className="dialog-content">
-              <p>Save this URL to get back to your current tape or share it with others.</p>
-              <div className="url-container">
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">Save this URL to get back to your current tape or share it with others.</p>
+              <div className="flex gap-3">
                 <input
                   type="text"
                   value={window.location.href}
                   readOnly
-                  className="url-input"
+                  className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50"
                 />
                 <button 
-                  className={`copy-btn ${copySuccess ? 'success' : ''}`}
+                  className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+                    copySuccess 
+                      ? 'bg-green-600 hover:bg-green-700' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
                   onClick={handleCopyUrl}
                   title="Copy to clipboard"
                 >
