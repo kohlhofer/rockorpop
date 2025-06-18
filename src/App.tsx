@@ -651,39 +651,41 @@ function App() {
       {/* Side Panel */}
       <div 
         className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[400px] lg:w-[450px] h-full 
-        bg-gradient-to-br from-[rgba(245,242,232,0.60)] to-[rgba(232,220,192,0.45)] 
+        bg-gradient-to-br from-[rgba(245,242,232,0.65)] to-[rgba(232,220,192,0.50)] 
         backdrop-blur-2xl backdrop-saturate-[1.2] border-l-2 border-[rgba(139,125,107,0.3)] 
         shadow-[-4px_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 ease-in-out 
-        z-[2002] overflow-y-auto flex flex-col`}
+        z-[2002] overflow-y-auto`}
       >
-        <button 
-          className="absolute top-5 right-5 w-8 h-8 md:w-9 md:h-9 rounded flex items-center justify-center
-          text-[#6b5b4f] text-xl font-bold transition-all duration-200 hover:bg-white/90 
-          hover:border-2 hover:border-[rgba(139,125,107,0.4)] hover:-translate-y-0.5 
-          hover:shadow-md active:translate-y-0.5 active:bg-white active:border-[rgba(139,125,107,0.6)] 
-          active:shadow-sm z-10"
-          onClick={() => setConfigPanelOpen(false)}
-          title="Close Settings"
-        >
-          ✕
-        </button>
+        <div className="sticky top-0 left-0 right-0 h-14 md:h-16 flex items-center justify-between px-8 bg-gradient-to-b from-[rgba(245,242,232,0.9)] to-transparent border-b border-[rgba(139,125,107,0.2)]">
+          <h2 className="text-[#4a3f36] text-lg font-bold">Design Your Tape</h2>
+          <button 
+            className="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center
+            text-[#6b5b4f] text-xl font-bold transition-all duration-200 hover:bg-white/90 
+            hover:border-2 hover:border-[rgba(139,125,107,0.4)] hover:-translate-y-0.5 
+            hover:shadow-md active:translate-y-0.5 active:bg-white active:border-[rgba(139,125,107,0.6)] 
+            active:shadow-sm"
+            onClick={() => setConfigPanelOpen(false)}
+            title="Close Settings"
+          >
+            ✕
+          </button>
+        </div>
 
-        <div className="p-12 pt-16 md:p-8 md:pt-12">
+        <div className="p-6 pt-4 md:p-8 md:pt-6">
           {/* Cassette Label Section */}
           <div className="mb-8">
             <label 
               htmlFor="cassette-label" 
-              className="block mb-3 text-[#4a3f36] text-base font-semibold 
-              text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)] cursor-pointer"
+              className="block mb-2 text-[#4a3f36] text-base font-semibold"
             >
-              Cassette Label
+              Name Your Tape
             </label>
             <input
               id="cassette-label"
               type="text"
               value={currentLabel}
               onChange={handleLabelChange}
-              placeholder="Enter cassette label..."
+              placeholder="Enter a catchy title..."
               className="w-full px-4 py-3 text-[15px] border-2 border-[rgba(139,125,107,0.3)] 
               rounded-lg bg-white/90 text-[#4a3f36] transition-all duration-200
               shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,0.5)]
@@ -697,11 +699,11 @@ function App() {
           <div className="mb-8">
             <label 
               htmlFor="playlist-url"
-              className="block mb-3 text-[#4a3f36] text-base font-semibold 
-              text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)] cursor-pointer"
+              className="block mb-2 text-[#4a3f36] text-base font-semibold"
             >
-              YouTube Playlist
+              Add Your Music
             </label>
+            <p className="mb-3 text-sm text-[#6b5b4f]/80">Paste a YouTube playlist URL to load your favorite tracks. The playlist will be converted into a retro cassette experience.</p>
             <input
               id="playlist-url"
               type="url"
@@ -718,12 +720,11 @@ function App() {
           </div>
 
           {/* Style Options */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Cover Art Section */}
             <div>
-              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
-                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
-                Cover Art
+              <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+                Choose Cover Design
               </label>
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
@@ -746,9 +747,8 @@ function App() {
 
             {/* Shell Color Section */}
             <div>
-              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
-                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
-                Shell Color
+              <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+                Pick Shell Color
               </label>
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => (
@@ -772,9 +772,8 @@ function App() {
 
             {/* Background Section */}
             <div>
-              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
-                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
-                Background
+            <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+                Set Background Style
               </label>
               <div className="flex flex-wrap gap-2">
                 {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
@@ -801,7 +800,7 @@ function App() {
           <div className="mt-8 pt-6 border-t border-[rgba(139,125,107,0.2)]">
             <button
               onClick={randomizeAll}
-              className="w-full px-6 py-3 text-sm font-semibold text-white 
+              className="w-full px-6 py-3.5 text-sm font-semibold text-white 
               bg-gradient-to-br from-[#4CAF50] to-[#45a049] rounded-lg
               shadow-[0_3px_6px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]
               transition-all duration-200 hover:from-[#45a049] hover:to-[#3d8b40]
@@ -809,7 +808,7 @@ function App() {
               active:translate-y-0.5 active:shadow-[0_2px_4px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]
               text-shadow-[1px_1px_2px_rgba(0,0,0,0.2)]"
             >
-              Randomize Design
+              Surprise Me with Random Design
             </button>
           </div>
         </div>
