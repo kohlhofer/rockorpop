@@ -606,107 +606,176 @@ function App() {
 
       {/* Side Panel Overlay */}
       {configPanelOpen && (
-        <div className="panel-overlay" onClick={() => setConfigPanelOpen(false)} />
+        <div 
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[2000]" 
+          onClick={() => setConfigPanelOpen(false)} 
+        />
       )}
 
       {/* Side Panel */}
-      <div className={`side-panel ${configPanelOpen ? 'open' : ''}`}>
+      <div 
+        className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[400px] lg:w-[450px] h-full 
+        bg-gradient-to-br from-[rgba(245,242,232,0.60)] to-[rgba(232,220,192,0.45)] 
+        backdrop-blur-2xl backdrop-saturate-[1.2] border-l-2 border-[rgba(139,125,107,0.3)] 
+        shadow-[-4px_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 ease-in-out 
+        z-[2002] overflow-y-auto flex flex-col`}
+      >
         <button 
-          className="close-btn" 
+          className="absolute top-5 right-5 w-8 h-8 md:w-9 md:h-9 rounded flex items-center justify-center
+          text-[#6b5b4f] text-xl font-bold transition-all duration-200 hover:bg-white/90 
+          hover:border-2 hover:border-[rgba(139,125,107,0.4)] hover:-translate-y-0.5 
+          hover:shadow-md active:translate-y-0.5 active:bg-white active:border-[rgba(139,125,107,0.6)] 
+          active:shadow-sm z-10"
           onClick={() => setConfigPanelOpen(false)}
           title="Close Settings"
         >
           ✕
         </button>
 
-        <div className="panel-content">
-          <div className="content-section">
-            <label htmlFor="cassette-label">Cassette Label</label>
+        <div className="p-12 pt-16 md:p-8 md:pt-12">
+          {/* Cassette Label Section */}
+          <div className="mb-8">
+            <label 
+              htmlFor="cassette-label" 
+              className="block mb-3 text-[#4a3f36] text-base font-semibold 
+              text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)] cursor-pointer"
+            >
+              Cassette Label
+            </label>
             <input
               id="cassette-label"
               type="text"
               value={currentLabel}
               onChange={handleLabelChange}
               placeholder="Enter cassette label..."
-              className="label-text-input"
+              className="w-full px-4 py-3 text-[15px] border-2 border-[rgba(139,125,107,0.3)] 
+              rounded-lg bg-white/90 text-[#4a3f36] transition-all duration-200
+              shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,0.5)]
+              focus:outline-none focus:border-[#6b5b4f] focus:bg-white/95 
+              focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1),0_0_0_3px_rgba(107,91,79,0.1)]
+              placeholder:text-[#4a3f36]/50"
             />
           </div>
 
-          <div className="content-section">
-            <label htmlFor="playlist-url">YouTube Playlist</label>
+          {/* YouTube Playlist Section */}
+          <div className="mb-8">
+            <label 
+              htmlFor="playlist-url"
+              className="block mb-3 text-[#4a3f36] text-base font-semibold 
+              text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)] cursor-pointer"
+            >
+              YouTube Playlist
+            </label>
             <input
               id="playlist-url"
               type="url"
               value={playlistUrl}
               onChange={handlePlaylistUrlChange}
               placeholder="Paste YouTube playlist URL..."
-              className="label-text-input"
+              className="w-full px-4 py-3 text-[15px] border-2 border-[rgba(139,125,107,0.3)] 
+              rounded-lg bg-white/90 text-[#4a3f36] transition-all duration-200
+              shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,0.5)]
+              focus:outline-none focus:border-[#6b5b4f] focus:bg-white/95 
+              focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1),0_0_0_3px_rgba(107,91,79,0.1)]
+              placeholder:text-[#4a3f36]/50"
             />
           </div>
 
-          <div className="style-section">
-            <div className="style-options">
-              <div className="option-group">
-                <label>Cover Art</label>
-                <div className="selector-grid">
-                  {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
-                    <button
-                      key={coverNum}
-                      className={`selector-btn ${currentCover === coverNum ? 'active' : ''}`}
-                      onClick={() => goToCover(coverNum)}
-                    >
-                      {coverNum}
-                    </button>
-                  ))}
-                </div>
+          {/* Style Options */}
+          <div className="space-y-6">
+            {/* Cover Art Section */}
+            <div>
+              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
+                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
+                Cover Art
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
+                  <button
+                    key={coverNum}
+                    onClick={() => goToCover(coverNum)}
+                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
+                    ${currentCover === coverNum 
+                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
+                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
+                    }
+                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
+                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
+                  >
+                    {coverNum}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <div className="option-group">
-                <label>Shell Color</label>
-                <div className="selector-grid">
-                  {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => (
-                    <button
-                      key={colorNum}
-                      className={`selector-btn ${currentBodyColor === colorNum ? 'active' : ''}`}
-                      onClick={() => goToBodyColor(colorNum)}
-                      title={bodyColorNames[colorNum - 1]}
-                    >
-                      {colorNum}
-                    </button>
-                  ))}
-                </div>
+            {/* Shell Color Section */}
+            <div>
+              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
+                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
+                Shell Color
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => (
+                  <button
+                    key={colorNum}
+                    onClick={() => goToBodyColor(colorNum)}
+                    title={bodyColorNames[colorNum - 1]}
+                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
+                    ${currentBodyColor === colorNum 
+                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
+                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
+                    }
+                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
+                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
+                  >
+                    {colorNum}
+                  </button>
+                ))}
               </div>
+            </div>
 
-              <div className="option-group">
-                <label>Background</label>
-                <div className="selector-grid">
-                  {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
-                    <button
-                      key={bgNum}
-                      className={`selector-btn ${currentBackground === bgNum ? 'active' : ''}`}
-                      onClick={() => goToBackground(bgNum)}
-                      title={backgroundNames[bgNum - 1]}
-                    >
-                      {bgNum}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="shuffle-section">
-                <button className="shuffle-btn" onClick={randomizeAll}>
-                  <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 5.5C3 5.22386 3.22386 5 3.5 5H6.5C6.77614 5 7 5.22386 7 5.5C7 5.77614 6.77614 6 6.5 6H4.70711L15.1464 16.4393C15.3417 16.6346 15.3417 16.9512 15.1464 17.1464C14.9512 17.3417 14.6346 17.3417 14.4393 17.1464L4 6.70711V8.5C4 8.77614 3.77614 9 3.5 9C3.22386 9 3 8.77614 3 8.5V5.5ZM16.5 3C16.7761 3 17 3.22386 17 3.5V8.5C17 8.77614 16.7761 9 16.5 9C16.2239 9 16 8.77614 16 8.5V5.70711L5.56066 16.1464C5.3654 16.3417 5.04882 16.3417 4.85355 16.1464C4.65829 15.9512 4.65829 15.6346 4.85355 15.4393L15.2929 5H13.5C13.2239 5 13 4.77614 13 4.5C13 4.22386 13.2239 4 13.5 4H16.5Z" fill="currentColor"/>
-                  </svg>
-                  Shuffle design
-                </button>
+            {/* Background Section */}
+            <div>
+              <label className="block mb-3 text-[#4a3f36] text-base font-semibold 
+                text-shadow-[1px_1px_2px_rgba(255,255,255,0.5)]">
+                Background
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
+                  <button
+                    key={bgNum}
+                    onClick={() => goToBackground(bgNum)}
+                    title={backgroundNames[bgNum - 1]}
+                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
+                    ${currentBackground === bgNum 
+                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
+                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
+                    }
+                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
+                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
+                  >
+                    {bgNum}
+                  </button>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-        
-        <div className="bookmark-note">
-          <p>💡 <strong>Tip:</strong> Use "Save and share" to get a URL that preserves your tape. Bookmark it or share it with friends!</p>
+
+          {/* Randomize Button */}
+          <div className="mt-8 pt-6 border-t border-[rgba(139,125,107,0.2)]">
+            <button
+              onClick={randomizeAll}
+              className="w-full px-6 py-3 text-sm font-semibold text-white 
+              bg-gradient-to-br from-[#4CAF50] to-[#45a049] rounded-lg
+              shadow-[0_3px_6px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]
+              transition-all duration-200 hover:from-[#45a049] hover:to-[#3d8b40]
+              hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.25)]
+              active:translate-y-0.5 active:shadow-[0_2px_4px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]
+              text-shadow-[1px_1px_2px_rgba(0,0,0,0.2)]"
+            >
+              Randomize Design
+            </button>
+          </div>
         </div>
       </div>
 
