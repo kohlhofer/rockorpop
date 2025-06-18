@@ -418,7 +418,8 @@ function App() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
+      const timeout: NodeJS.Timeout = setTimeout(() => setCopySuccess(false), 2000);
+      return () => clearTimeout(timeout);
     } catch (err) {
       console.error('Failed to copy URL:', err);
       // Fallback for older browsers
@@ -429,30 +430,9 @@ function App() {
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
+      const timeout: NodeJS.Timeout = setTimeout(() => setCopySuccess(false), 2000);
+      return () => clearTimeout(timeout);
     }
-  };
-
-  // New tape functionality
-  const handleNewTape = () => {
-    // Clear URL parameters
-    window.history.replaceState(null, '', window.location.pathname);
-    
-    // Generate new random values
-    const newCover = Math.floor(Math.random() * totalCovers) + 1;
-    const newBodyColor = Math.floor(Math.random() * totalBodyColors) + 1;
-    const newBackground = Math.floor(Math.random() * totalBackgrounds) + 1;
-    const newLabel = labelOptions[Math.floor(Math.random() * labelOptions.length)];
-    
-    // Update state
-    setCurrentCover(newCover);
-    setCurrentBodyColor(newBodyColor);
-    setCurrentBackground(newBackground);
-    setCurrentLabel(newLabel);
-    setPlaylistUrl('');
-    
-    // Open the config panel
-    setConfigPanelOpen(true);
   };
 
   const handleYouTubeClick = () => {
@@ -544,16 +524,10 @@ function App() {
         </div>
         <div className="flex items-center gap-3">
           <button 
-            onClick={handleNewTape}
-            className="px-4 py-2 text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
-          >
-            New
-          </button>
-          <button 
             onClick={() => setConfigPanelOpen(!configPanelOpen)}
             className="px-4 py-2 text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
           >
-            Edit
+            Make a tape...
           </button>
         </div>
       </nav>
