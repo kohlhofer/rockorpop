@@ -608,9 +608,9 @@ function App() {
         </main>
 
         {/* Video Section as Footer - Outside main content for full width */}
-        <footer className="w-screen bg-black pb-10">
+        <footer className="w-screen">
           {/* Current Track Info Bar */}
-          <div className="w-full h-[60px] bg-black/90 backdrop-blur-md flex items-center px-4">
+          <div className="w-full h-[60px] bg-black/60 flex items-center px-4">
             <div className="flex-1 min-w-0 flex items-start justify-start text-white">
               <div className="flex-1 min-w-0 mr-4 flex flex-col justify-center">
                 <div className="text-sm font-medium mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis text-left">
@@ -627,7 +627,7 @@ function App() {
 
           {/* Video Player */}
           {playlistId && (
-            <div className="w-full flex justify-center bg-black">
+            <div className="w-full flex justify-center bg-black pb-10">
               <div className="w-full max-w-[356px] aspect-video">
                 <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
               </div>
