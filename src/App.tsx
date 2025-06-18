@@ -143,7 +143,7 @@ function App() {
   const [playlistIndex, setPlaylistIndex] = useState(0);
   const [playlistLength, setPlaylistLength] = useState<number>(0);
   const [playlistDurations, setPlaylistDurations] = useState<number[]>([]);
-  const progressInterval = useRef<number | null>(null);
+  const progressInterval = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const [currentVideoId, setCurrentVideoId] = useState<string>('');
@@ -419,8 +419,7 @@ function App() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopySuccess(true);
-      const timeout: NodeJS.Timeout = setTimeout(() => setCopySuccess(false), 2000);
-      return () => clearTimeout(timeout);
+      setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
       console.error('Failed to copy URL:', err);
       // Fallback for older browsers
@@ -431,8 +430,7 @@ function App() {
       document.execCommand('copy');
       document.body.removeChild(textArea);
       setCopySuccess(true);
-      const timeout: NodeJS.Timeout = setTimeout(() => setCopySuccess(false), 2000);
-      return () => clearTimeout(timeout);
+      setTimeout(() => setCopySuccess(false), 2000);
     }
   };
 
@@ -499,7 +497,7 @@ function App() {
 
   // Add useEffect to increment playerResetKey when playlistUrl changes
   useEffect(() => {
-    setPlayerResetKey(k => k + 1);
+    setPlayerResetKey((k: number) => k + 1);
   }, [playlistUrl]);
 
   return (
@@ -533,89 +531,115 @@ function App() {
         </div>
       </nav>
 
-      <div className="min-h-screen pt-20 pb-16 px-4 flex flex-col items-center">
-        {/* Main Cassette Section */}
-        <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-8">
-          {/* Cassette Component */}
-          <div className="w-full flex flex-col items-center gap-6">
-            <Cassette 
-              label={currentLabel} 
-              cover={currentCover} 
-              bodyColor={currentBodyColor}
-              playState={ytPlayState}
-              progress={currentProgress}
-            />
-            
-            {/* Playback Controls */}
-            <div className="flex justify-center items-center bg-black/50 backdrop-blur-md rounded-full px-4 py-1 shadow-lg">
-              <div className="flex items-center gap-3">
-                <button
-                  className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                  onClick={handlePrev}
-                  title="Previous"
-                  disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === 0}
-                  aria-label="Previous"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
-                    <polygon points="20,5 8,12 20,19" fill="currentColor"/>
-                  </svg>
-                </button>
-                {ytPlayState === 'FW' ? (
-                  <button
-                    className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    onClick={handlePause}
-                    title="Pause"
-                    disabled={!playlistId || !ytReady}
-                    aria-label="Pause"
-                  >
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="8" y="7" width="5" height="18" rx="2" fill="currentColor"/>
-                      <rect x="19" y="7" width="5" height="18" rx="2" fill="currentColor"/>
-                    </svg>
-                  </button>
-                ) : (
-                  <button
-                    className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                    onClick={handlePlay}
-                    title="Play"
-                    disabled={!playlistId || !ytReady}
-                    aria-label="Play"
-                  >
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <polygon points="10,7 26,16 10,25" fill="currentColor"/>
-                    </svg>
-                  </button>
-                )}
-                <button
-                  className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-                  onClick={handleNext}
-                  title="Next"
-                  disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === playlistDurations.length - 1}
-                  aria-label="Next"
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="18" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
-                    <polygon points="4,5 16,12 4,19" fill="currentColor"/>
-                  </svg>
-                </button>
+      <div className="min-h-screen flex flex-col">
+        {/* Main Content */}
+        <main className="flex-1">
+          {/* Cassette Section */}
+          <div className="pt-48 pb-32 flex flex-col items-center">
+            <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-12">
+              {/* Cassette Component */}
+              <div className="w-full flex flex-col items-center gap-8">
+                <Cassette 
+                  label={currentLabel} 
+                  cover={currentCover} 
+                  bodyColor={currentBodyColor}
+                  playState={ytPlayState}
+                  progress={currentProgress}
+                />
+                
+                {/* Playback Controls */}
+                <div className="flex justify-center items-center bg-black/50 backdrop-blur-md rounded-full px-4 py-1 shadow-lg">
+                  <div className="flex items-center gap-3">
+                    <button
+                      className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      onClick={handlePrev}
+                      title="Previous"
+                      disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === 0}
+                      aria-label="Previous"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                        <polygon points="20,5 8,12 20,19" fill="currentColor"/>
+                      </svg>
+                    </button>
+                    {ytPlayState === 'FW' ? (
+                      <button
+                        className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        onClick={handlePause}
+                        title="Pause"
+                        disabled={!playlistId || !ytReady}
+                        aria-label="Pause"
+                      >
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <rect x="8" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                          <rect x="19" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    ) : (
+                      <button
+                        className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        onClick={handlePlay}
+                        title="Play"
+                        disabled={!playlistId || !ytReady}
+                        aria-label="Play"
+                      >
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <polygon points="10,7 26,16 10,25" fill="currentColor"/>
+                        </svg>
+                      </button>
+                    )}
+                    <button
+                      className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                      onClick={handleNext}
+                      title="Next"
+                      disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === playlistDurations.length - 1}
+                      aria-label="Next"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="18" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                        <polygon points="4,5 16,12 4,19" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Video Section as Footer - Outside main content for full width */}
+        <footer className="w-screen bg-black pb-10">
+          {/* Current Track Info Bar */}
+          <div className="w-full h-[60px] bg-black/90 backdrop-blur-md flex items-center px-4">
+            <div className="flex-1 min-w-0 flex items-start justify-start text-white">
+              <div className="flex-1 min-w-0 mr-4 flex flex-col justify-center">
+                <div className="text-sm font-medium mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis text-left">
+                  {currentVideoTitle || 'No track playing'}
+                </div>
+                <div className="text-xs text-white/70 text-left">
+                  {playlistLength > 0 && typeof currentTrackIndex === 'number' 
+                    ? `${currentTrackIndex + 1}/${playlistLength}` 
+                    : ''}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Video Player Section */}
+          {/* Video Player */}
           {playlistId && (
-            <div className="w-full max-w-[356px] aspect-video bg-black rounded-lg overflow-hidden shadow-xl">
-              <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
+            <div className="w-full flex justify-center bg-black">
+              <div className="w-full max-w-[356px] aspect-video">
+                <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
+              </div>
             </div>
           )}
-        </div>
+        </footer>
       </div>
 
       {/* Side Panel Overlay */}
       {configPanelOpen && (
         <div 
-          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[2000]" 
+          className="fixed inset-0 bg-black/20 z-[2000]" 
           onClick={() => setConfigPanelOpen(false)} 
         />
       )}
@@ -823,31 +847,6 @@ function App() {
           </div>
         </>
       )}
-
-      {/* Bottom Bar for YouTube compliance */}
-      <div className="fixed bottom-0 left-0 right-0 h-[60px] bg-black/80 backdrop-blur-md flex items-center justify-between z-[2000]">
-        <div className="flex-1 min-w-0 px-4 flex items-start justify-start text-white">
-          <div className="flex-1 min-w-0 mr-4 flex flex-col justify-center">
-            <div className="text-sm font-medium mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis text-left">
-              {currentVideoTitle || 'No track playing'}
-            </div>
-            <div className="text-xs text-white/70 text-left">
-              {playlistLength > 0 && typeof currentTrackIndex === 'number' 
-                ? `${currentTrackIndex + 1}/${playlistLength}` 
-                : ''}
-            </div>
-          </div>
-        </div>
-        {/* Thumbnail section */}
-        <div 
-          className="w-[356px] h-[200px] flex-shrink-0 overflow-hidden relative mr-1 mb-1 cursor-pointer"
-          onClick={handleYouTubeClick}
-        >
-          <div className="w-full h-full relative">
-            {/* You could render a static image or YouTube logo here */}
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
