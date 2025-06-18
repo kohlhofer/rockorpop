@@ -504,13 +504,13 @@ function App() {
   return (
     <div className={`app background-${currentBackground}`}>
       {/* Top Navigation Bar */}
-      <nav className="fixed top-0 left-0 right-0 h-16 md:h-[64px] flex items-center justify-between px-4 md:px-5 z-[2000]">
-        <div className="flex items-center gap-3">
+      <nav className="fixed top-0 left-0 right-0 h-14 md:h-16 flex items-center justify-between px-3 md:px-4 z-[2000]">
+        <div className="flex items-center gap-2 md:gap-3">
           <button 
             onClick={handleShareTape}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold text-white bg-gradient-to-br from-[#2ecc71] to-[#27ae60] hover:from-[#27ae60] hover:to-[#219a52] shadow-[0_2px_8px_rgba(46,204,113,0.25)] hover:shadow-[0_4px_12px_rgba(46,204,113,0.35)] transition-all duration-200"
+            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[13px] md:text-sm font-bold text-white bg-[#0E9DCC]/70 hover:bg-[#0E9DCC]/80 backdrop-blur-md shadow-lg hover:shadow-xl transition-all duration-200"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="14" height="14" className="md:w-4 md:h-4" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/>
             </svg>
             Share
@@ -522,10 +522,10 @@ function App() {
             label="Tapes..."
           />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center">
           <button 
             onClick={() => setConfigPanelOpen(!configPanelOpen)}
-            className="px-4 py-2 rounded-lg text-sm font-bold text-white bg-black/50 hover:bg-black/60 shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.25)] transition-all duration-200"
+            className="px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[13px] md:text-sm font-bold text-[#2A1810] bg-[#FFB300]/80 hover:bg-[#FFB300]/90 backdrop-blur-md shadow-lg hover:shadow-xl transition-all duration-200"
           >
             Make a tape...
           </button>
