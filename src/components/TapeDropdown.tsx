@@ -12,40 +12,23 @@ interface TapeDropdownProps {
   label?: string;
 }
 
-const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, label = 'Tapes...' }) => {
+const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, label = 'Select...' }) => {
   const [open, setOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLUListElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const selected = options.find(o => o.value === value);
 
-  // Close on outside click
   useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (
-        !buttonRef.current?.contains(e.target as Node) &&
-        !menuRef.current?.contains(e.target as Node)
-      ) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!dropdownRef.current?.contains(event.target as Node) && 
+          !buttonRef.current?.contains(event.target as Node)) {
         setOpen(false);
       }
-    }
-    if (open) {
-      document.addEventListener('mousedown', handleClick);
-    }
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [open]);
+    };
 
-  // Keyboard navigation
-  useEffect(() => {
-    function handleKey(e: KeyboardEvent) {
-      if (!open) return;
-      if (e.key === 'Escape') setOpen(false);
-    }
-    if (open) {
-      document.addEventListener('keydown', handleKey);
-    }
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open]);
-
-  const selected = options.find(opt => opt.value === value);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleSelect = (option: Option) => {
     onSelect(option.value);
@@ -53,10 +36,10 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
   };
 
   return (
-    <div className="tape-dropdown" style={{ display: 'inline-block', position: 'relative' }}>
+    <div className="relative inline-block">
       <button
         ref={buttonRef}
-        className="action-btn"
+        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white/80 hover:text-white transition-colors duration-200"
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
@@ -68,84 +51,32 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
         </svg>
       </button>
       {open && (
-        <ul
-          ref={menuRef}
-          className="tape-dropdown-menu"
+        <div
+          ref={dropdownRef}
+          className="absolute left-0 mt-2 w-56 rounded-lg bg-[rgba(30,30,30,0.95)] backdrop-blur-lg backdrop-saturate-[1.2] shadow-lg ring-1 ring-black ring-opacity-5 z-50"
           role="listbox"
-          tabIndex={-1}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 'calc(100% + 8px)',
-            background: 'rgba(30, 30, 30, 0.95)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: 12,
-            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-            minWidth: '200px',
-            zIndex: 2001,
-            padding: '6px 0',
-            margin: 0,
-            listStyle: 'none',
-            overflow: 'hidden',
-            color: '#fff',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif',
-          }}
         >
-          <li
-            style={{
-              padding: '8px 16px 6px',
-              background: 'none',
-              fontWeight: 600,
-              color: 'rgba(255, 255, 255, 0.5)',
-              fontSize: 11,
-              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
-              letterSpacing: '0.08em',
-              userSelect: 'none',
-              textTransform: 'uppercase',
-              textAlign: 'left',
-            }}
-            tabIndex={-1}
-            aria-disabled="true"
-          >
-            Example tapes
-          </li>
-          {options.map((option, i) => (
-            <li
-              key={i}
-              role="option"
-              aria-selected={selected?.value === option.value}
-              tabIndex={0}
-              onClick={() => handleSelect(option)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  handleSelect(option);
-                }
-              }}
-              style={{
-                padding: '10px 16px',
-                cursor: 'pointer',
-                background: selected?.value === option.value ? 'rgba(255, 255, 255, 0.1)' : 'none',
-                transition: 'all 0.2s ease',
-                fontSize: 14,
-                textAlign: 'left',
-                color: selected?.value === option.value ? '#fff' : 'rgba(255, 255, 255, 0.8)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
-              }}
-              onMouseLeave={(e) => {
-                if (selected?.value !== option.value) {
-                  e.currentTarget.style.background = 'none';
-                }
-              }}
-            >
-              {option.label}
-            </li>
-          ))}
-        </ul>
+          <div className="py-1">
+            <div className="px-4 py-2 text-xs font-medium text-white/50 uppercase tracking-wider">
+              Example tapes
+            </div>
+            {options.map((option) => (
+              <button
+                key={option.value}
+                className={`block w-full text-left px-4 py-2 text-sm hover:bg-white/10 transition-colors duration-150
+                  ${option.value === value ? 'text-white font-medium' : 'text-white/80'}`}
+                onClick={() => {
+                  onSelect(option.value);
+                  setOpen(false);
+                }}
+                role="option"
+                aria-selected={option.value === value}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

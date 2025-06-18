@@ -721,101 +721,6 @@ body {
   }
 }
 
-// Top Navigation Bar
-.top-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: rgba(20, 20, 20, 0.85);
-  backdrop-filter: blur(10px) saturate(1.2);
-  -webkit-backdrop-filter: blur(10px) saturate(1.2);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  z-index: 2000;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-
-  @media (max-width: 768px) {
-    height: 56px;
-    padding: 0 16px;
-  }
-}
-
-.nav-group {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-
-  @media (max-width: 768px) {
-    gap: 8px;
-  }
-}
-
-// Update action buttons to match new design
-.action-btn {
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-
-  @media (max-width: 768px) {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-
-  &:hover {
-    color: #fff;
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    opacity: 0.9;
-  }
-}
-
-// Share button retains prominent styling
-.share-btn {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  color: #fff;
-  
-  &:hover {
-    background: linear-gradient(135deg, #27ae60, #219a52);
-    color: #fff;
-  }
-}
-
-// Remove specific button gradients
-.edit-btn, .new-btn {
-  &:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-}
-
-// Remove old positioning styles
-.top-left-actions, .top-right-actions {
-  position: static;
-  top: auto;
-  left: auto;
-  right: auto;
-}
-
 // Share Dialog
 .dialog-overlay {
   position: fixed;
@@ -824,7 +729,7 @@ body {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.4);
-  z-index: 1000;
+  z-index: 2500;
   backdrop-filter: blur(4px);
 }
 
@@ -839,7 +744,7 @@ body {
   box-shadow: 
     0 8px 24px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  z-index: 1001;
+  z-index: 2501;
   width: 90%;
   max-width: 500px;
   animation: dialogSlideIn 0.2s ease-out;
@@ -1029,11 +934,6 @@ body {
     top: 16px;
     right: 16px;
     gap: 8px;
-  }
-
-  .action-btn {
-    padding: 6px 12px;
-    font-size: 13px;
   }
 
   .share-dialog {
