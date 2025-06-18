@@ -1,15 +1,36 @@
 {
-  "name": "cassette-component",
+  "name": "rockorpop",
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "description": "A beautiful web app for creating and sharing virtual mixtapes with a retro cassette interface",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "start": "vite preview"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "music",
+    "mixtape",
+    "cassette",
+    "retro",
+    "react",
+    "typescript",
+    "vite"
+  ],
+  "author": {
+    "name": "Alex"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/rockorpop"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/rockorpop/issues"
+  },
+  "homepage": "https://rockorpop.com",
   "license": "ISC",
   "dependencies": {
     "react": "^18.2.0",
@@ -19,12 +40,27 @@
     "@types/node": "^24.0.3",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "@vitejs/plugin-react": "^4.2.0",
+    "@vitejs/plugin-react": "^4.5.2",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.31",
     "sass": "^1.69.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5.2.0",
-    "vite": "^5.0.0"
+    "vite": "^5.4.19"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }
