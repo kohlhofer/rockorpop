@@ -219,15 +219,37 @@ class Cassette extends Component<CassetteProps, CassetteState> {
 
   render() {
     const { 
-      label = this.randomLabel, 
-      cover = this.randomCover, 
-      bodyColor = this.randomBodyColor, 
-      playState = 'FW', 
-      progress = 25 
+      label: rawLabel, 
+      cover: rawCover, 
+      bodyColor: rawBodyColor, 
+      playState: rawPlayState, 
+      progress: rawProgress 
     } = this.props;
     
-    const coverImage = tapeCovers[cover] || tapeCovers[1];
-    const selectedBodyColor = bodyColors[bodyColor] || bodyColors[1];
+    // Validate and normalize all parameters
+    const label = typeof rawLabel === 'string' && rawLabel.trim() !== '' 
+      ? rawLabel 
+      : this.randomLabel;
+    
+    const cover = typeof rawCover === 'number' && rawCover >= 1 && rawCover <= 5 && Number.isInteger(rawCover)
+      ? rawCover 
+      : this.randomCover;
+    
+    const bodyColor = typeof rawBodyColor === 'number' && rawBodyColor >= 1 && rawBodyColor <= 10 && Number.isInteger(rawBodyColor)
+      ? rawBodyColor 
+      : this.randomBodyColor;
+    
+    const validPlayStates = ['STOP', 'FW', 'BW', 'FFW', 'FBW'];
+    const playState = typeof rawPlayState === 'string' && validPlayStates.includes(rawPlayState)
+      ? rawPlayState 
+      : 'FW';
+    
+    const progress = typeof rawProgress === 'number' && !isNaN(rawProgress)
+      ? Math.max(0, Math.min(100, rawProgress)) // Clamp between 0 and 100
+      : 25;
+    
+    const coverImage = tapeCovers[cover];
+    const selectedBodyColor = bodyColors[bodyColor];
     const playStateClass = `tape-${playState.toLowerCase()}`;
 
     return (
