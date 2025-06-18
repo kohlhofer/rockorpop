@@ -50,22 +50,36 @@ body {
   }
   
   &.background-4 {
-    // Pride colors
+    // Pride Flag
     background: linear-gradient(
       to bottom,
-      #ff0018 0%,
-      #ff0018 16.666%,
-      #ffa52c 16.666%,
-      #ffa52c 33.333%,
-      #ffff41 33.333%,
-      #ffff41 50%,
-      #008018 50%,
-      #008018 66.666%,
-      #0000f9 66.666%,
-      #0000f9 83.333%,
-      #86007d 83.333%,
-      #86007d 100%
+      #E50000 0%,      // Red
+      #E50000 16.67%,
+      #FF8D00 16.67%,  // Orange
+      #FF8D00 33.33%,
+      #FFEE00 33.33%,  // Yellow
+      #FFEE00 50%,
+      #028121 50%,     // Green
+      #028121 66.67%,
+      #004CFF 66.67%,  // Blue
+      #004CFF 83.33%,
+      #770088 83.33%,  // Purple
+      #770088 100%
     );
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0.1) 0%,
+        rgba(255,255,255,0) 20%,
+        rgba(255,255,255,0) 80%,
+        rgba(255,255,255,0.1) 100%
+      );
+      pointer-events: none;
+    }
   }
   
   &.background-5 {
@@ -89,27 +103,117 @@ body {
   }
   
   &.background-7 {
-    // Denim
-    background-color: #1e3a8a;
-    background-image: 
-      linear-gradient(335deg, #172554 23px, transparent 23px),
-      linear-gradient(155deg, #172554 23px, transparent 23px),
-      linear-gradient(335deg, #172554 23px, transparent 23px),
-      linear-gradient(155deg, #172554 23px, transparent 23px);
-    background-size: 58px 58px;
-    background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+    // Modern Tartan
+    background-color: #4ecdc4;  // Bright teal base
+    background-image:
+      // Large squares
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 40px,
+        rgba(255, 107, 107, 0.7) 40px,  // Coral red
+        rgba(255, 107, 107, 0.7) 60px,
+        transparent 60px,
+        transparent 100px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 40px,
+        rgba(255, 107, 107, 0.7) 40px,  // Coral red
+        rgba(255, 107, 107, 0.7) 60px,
+        transparent 60px,
+        transparent 100px
+      ),
+      // Medium stripes
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 35px,
+        rgba(255, 217, 61, 0.6) 35px,  // Bright yellow
+        rgba(255, 217, 61, 0.6) 45px,
+        transparent 45px,
+        transparent 90px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 35px,
+        rgba(255, 217, 61, 0.6) 35px,  // Bright yellow
+        rgba(255, 217, 61, 0.6) 45px,
+        transparent 45px,
+        transparent 90px
+      ),
+      // Thin accent lines
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 10px,
+        rgba(78, 205, 196, 0.8) 10px,  // Teal accent
+        rgba(78, 205, 196, 0.8) 15px,
+        transparent 15px,
+        transparent 90px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 10px,
+        rgba(78, 205, 196, 0.8) 10px,  // Teal accent
+        rgba(78, 205, 196, 0.8) 15px,
+        transparent 15px,
+        transparent 90px
+      );
+    background-size: 100px 100px;
   }
   
   &.background-8 {
-    // Neon Grid
+    // Synthwave Grid
     background-color: #000000;
     background-image: 
-      linear-gradient(#ff00ea 1px, transparent 1px),
-      linear-gradient(90deg, #ff00ea 1px, transparent 1px),
-      linear-gradient(#00ffff 1px, transparent 1px),
-      linear-gradient(90deg, #00ffff 1px, transparent 1px);
-    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+      linear-gradient(0deg, transparent 0%, rgba(255, 0, 255, 0.2) 2%, transparent 3%),
+      linear-gradient(0deg, transparent 0%, rgba(0, 255, 255, 0.2) 2%, transparent 3%),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0%,
+        transparent 48%,
+        rgba(255, 0, 255, 0.5) 50%,
+        transparent 52%
+      ),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0%,
+        transparent 48%,
+        rgba(0, 255, 255, 0.5) 50%,
+        transparent 52%
+      );
+    background-size: 
+      100% 4px,
+      100% 4px,
+      100px 100px,
+      100px 100px;
+    background-position: 
+      0 0,
+      0 2px,
+      0 0,
+      0 0;
+    animation: moveGrid 20s linear infinite;
+  }
+
+  @keyframes moveGrid {
+    from {
+      background-position: 
+        0 0,
+        0 2px,
+        0 0,
+        0 0;
+    }
+    to {
+      background-position: 
+        0 -100px,
+        0 -98px,
+        0 -100px,
+        0 0;
+    }
   }
   
   &.background-9 {
@@ -123,15 +227,35 @@ body {
   
   &.background-10 {
     // Vinyl Records
-    background-color: #000000;
-    background-image: repeating-radial-gradient(
-      circle at 50% 50%,
-      transparent 0,
-      transparent 9px,
-      rgba(255,255,255,.07) 10px,
-      rgba(255,255,255,.07) 11px
-    );
-    background-size: 30px 30px;
+    background-color: #111111;
+    background-image: 
+      radial-gradient(circle at 50% 50%, #2a2a2a 0%, #111111 75%),
+      repeating-radial-gradient(
+        circle at 50% 50%,
+        transparent 0,
+        transparent 8px,
+        rgba(255,255,255,0.15) 9px,
+        rgba(255,255,255,0.15) 10px,
+        transparent 11px
+      ),
+      repeating-radial-gradient(
+        circle at 50% 50%,
+        transparent 0,
+        transparent 50px,
+        rgba(255,255,255,0.12) 51px,
+        rgba(255,255,255,0.12) 52px,
+        transparent 53px
+      ),
+      radial-gradient(
+        circle at 50% 50%,
+        transparent 0,
+        transparent 100px,
+        rgba(255,255,255,0.1) 101px,
+        rgba(255,255,255,0.1) 102px,
+        transparent 103px
+      );
+    background-size: 100% 100%, 30px 30px, 200px 200px, 400px 400px;
+    background-position: center center;
   }
   
   &.background-11 {
@@ -182,6 +306,209 @@ body {
     background-repeat: no-repeat;
     background-attachment: fixed;
   }
+
+  &.background-17 {
+    // Memphis Style - 80s inspired geometric pattern
+    background-color: #ff6b6b;
+    background-image: 
+      radial-gradient(circle at 0% 0%, #ffd93d 20px, transparent 20px),
+      radial-gradient(circle at 100% 0%, #4ecdc4 20px, transparent 20px),
+      radial-gradient(circle at 100% 100%, #ff6b6b 20px, transparent 20px),
+      radial-gradient(circle at 0% 100%, #95a5a6 20px, transparent 20px),
+      linear-gradient(45deg, transparent 0%, transparent 45%, #2ecc71 45%, #2ecc71 55%, transparent 55%),
+      linear-gradient(-45deg, transparent 0%, transparent 45%, #3498db 45%, #3498db 55%, transparent 55%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 19px, #e74c3c 20px),
+      repeating-linear-gradient(90deg, transparent 0px, transparent 19px, #9b59b6 20px);
+    background-size: 100px 100px;
+    animation: memphisMove 30s linear infinite;
+  }
+
+  &.background-18 {
+    // Holographic Waves
+    background: 
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 10px,
+        rgba(255, 255, 255, 0.1) 10px,
+        rgba(255, 255, 255, 0.1) 20px
+      ),
+      linear-gradient(
+        135deg,
+        #ff61d5 0%,
+        #b318f0 20%,
+        #4405fc 40%,
+        #00d8ff 60%,
+        #00fff9 80%,
+        #ff61d5 100%
+      );
+    background-size: 100% 100%, 100% 100%;
+    animation: holoShift 8s linear infinite;
+  }
+
+  &.background-19 {
+    // Circuit Board
+    background-color: #1a1a1a;
+    background-image: 
+      linear-gradient(90deg, rgba(0, 255, 0, 0.07) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(0, 255, 0, 0.07) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(0, 255, 0, 0.1) 2px, transparent 2px),
+      linear-gradient(45deg, transparent 48%, rgba(0, 255, 0, 0.2) 49%, rgba(0, 255, 0, 0.2) 51%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, rgba(0, 255, 0, 0.2) 49%, rgba(0, 255, 0, 0.2) 51%, transparent 52%);
+    background-size: 30px 30px, 30px 30px, 90px 90px, 90px 90px, 90px 90px;
+    background-position: center center;
+  }
+
+  &.background-20 {
+    // Retro TV Static
+    background-color: #222;
+    background-image: 
+      repeating-radial-gradient(
+        circle at 17% 32%,
+        rgba(255, 255, 255, 0.1) 0px,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      ),
+      repeating-radial-gradient(
+        circle at 67% 54%,
+        rgba(255, 255, 255, 0.1) 0px,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      ),
+      repeating-radial-gradient(
+        circle at 82% 17%,
+        rgba(255, 255, 255, 0.1) 0px,
+        rgba(255, 255, 255, 0.1) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(
+          90deg,
+          transparent 50%,
+          rgba(255, 255, 255, 0.05) 50%
+        ),
+        linear-gradient(
+          0deg,
+          rgba(255, 0, 0, 0.03) 0%,
+          rgba(0, 255, 0, 0.03) 50%,
+          rgba(0, 0, 255, 0.03) 100%
+        );
+      background-size: 2px 100%, 100% 100%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+  }
+
+  &.background-21 {
+    // Neon Zigzag
+    background: 
+      linear-gradient(135deg, #ff00ff 25%, transparent 25%) -49px 1px,
+      linear-gradient(225deg, #00ffff 25%, transparent 25%) -49px 1px,
+      linear-gradient(315deg, #ff00ff 25%, transparent 25%) 1px 1px,
+      linear-gradient(45deg, #00ffff 25%, transparent 25%) 1px 1px,
+      linear-gradient(135deg, #000 25%, transparent 25%) -50px 0,
+      linear-gradient(225deg, #000 25%, transparent 25%) -50px 0,
+      linear-gradient(315deg, #000 25%, transparent 25%),
+      linear-gradient(45deg, #000 25%, transparent 25%);
+    background-size: 100px 100px;
+    background-color: #111;
+    mix-blend-mode: normal;
+  }
+
+  &.background-22 {
+    // Retro Bubble Grid
+    background-color: #ff6b6b;
+    background-image: 
+      radial-gradient(circle at center, #4ecdc4 10%, transparent 10%),
+      radial-gradient(circle at center, #ffd93d 20%, transparent 20%);
+    background-size: 40px 40px, 60px 60px;
+    background-position: 0 0, 20px 20px;
+    animation: bubbleFloat 20s linear infinite;
+  }
+
+  &.background-23 {
+    // Digital Rain
+    background:
+      linear-gradient(90deg,
+        transparent 0,
+        transparent 29px,
+        rgba(0, 255, 0, 0.1) 29px,
+        rgba(0, 255, 0, 0.1) 30px
+      ),
+      linear-gradient(0deg, 
+        rgba(0, 255, 0, 0.1) 50%, 
+        transparent 50%
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 5px,
+        rgba(0, 255, 0, 0.1) 5px,
+        rgba(0, 255, 0, 0.1) 10px
+      );
+    background-color: #000;
+    background-size: 30px 100%, 30px 20px, 30px 20px;
+    animation: digitalRain 2s linear infinite;
+  }
+
+  &.background-24 {
+    // Retro Waves
+    background:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        rgba(0, 0, 0, 0.1) 10px,
+        rgba(0, 0, 0, 0.1) 20px
+      ),
+      linear-gradient(
+        180deg,
+        #ff0080,
+        #ff0080 10px,
+        #000 10px,
+        #000 20px,
+        #00ff00 20px,
+        #00ff00 30px,
+        #000 30px,
+        #000 40px,
+        #0080ff 40px,
+        #0080ff 50px
+      );
+    background-size: 100% 100%, 100% 50px;
+  }
+
+  @keyframes memphisMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
+  }
+
+  @keyframes holoShift {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 20px 0, 0 0; }
+  }
+
+  @keyframes staticNoise {
+    0% { transform: translate(0, 0); }
+    33% { transform: translate(-2px, 2px); }
+    66% { transform: translate(2px, -2px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  @keyframes bubbleFloat {
+    0% { background-position: 0 0, 20px 20px; }
+    100% { background-position: 40px 40px, 60px 60px; }
+  }
+
+  @keyframes digitalRain {
+    0% { background-position: 0 0, 0 0, 0 0; }
+    100% { background-position: 0 0, 0 20px, 0 20px; }
+  }
 }
-
-

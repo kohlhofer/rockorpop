@@ -92,7 +92,7 @@ const loadFromUrlParams = () => {
   return {
     cover: parseInt(params.get('cover') || '0') || Math.floor(Math.random() * 5) + 1,
     bodyColor: parseInt(params.get('shell') || '0') || Math.floor(Math.random() * 10) + 1,
-    background: parseInt(params.get('bg') || '0') || Math.floor(Math.random() * 16) + 1,
+    background: parseInt(params.get('bg') || '0') || Math.floor(Math.random() * 24) + 1,
     label: params.get('label') ? decodeURIComponent(params.get('label')!) : labelOptions[Math.floor(Math.random() * labelOptions.length)],
     playlistId: params.get('playlist') || '',
     videoId: params.get('video') || ''
@@ -151,7 +151,7 @@ function App() {
   
   const totalCovers = 5;
   const totalBodyColors = 10;
-  const totalBackgrounds = 16;
+  const totalBackgrounds = 24;
   
   const bodyColorNames = [
     'Blue', 'Orange', 'Dark Grey', 'Light Grey', 
@@ -162,7 +162,8 @@ function App() {
     'Default', 'Checkerboard', 'Diagonal Stripes', 'Pride', 'Psychedelic',
     'Wood Grain', 'Denim', 'Neon Grid', 'Notebook Paper', 'Vinyl Records',
     'Soft Lavender', 'Warm Cream', 'Isometric Cubes', 'Dot Grid', 'Graph Paper',
-    'Rock or Pop'
+    'Rock or Pop', 'Memphis Style', 'Holographic Waves', 'Circuit Board', 'Retro TV Static',
+    'Neon Zigzag', 'Retro Bubble Grid', 'Digital Rain', 'Retro Waves'
   ];
 
   const goToCover = (coverNumber: number) => {
