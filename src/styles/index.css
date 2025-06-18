@@ -1,0 +1,7 @@
+/* Import custom styles */
+@import './App.scss';
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
