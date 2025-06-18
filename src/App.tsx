@@ -533,74 +533,82 @@ function App() {
         </div>
       </nav>
 
-      <div className="demo-container">
-        <div className="cassette-wrapper">
-          <Cassette 
-            label={currentLabel} 
-            cover={currentCover} 
-            bodyColor={currentBodyColor}
-            playState={ytPlayState}
-            progress={currentProgress}
-          />
-          {/* YouTube Player (visible, fixed at bottom right) */}
-          <div className="youtube-container">
-            <div id="yt-player-bar" ref={playerRef} />
-          </div>
-          {/* Playback Controls */}
-          <div className="yt-controls-container">
-            <div className="yt-controls">
-              <button
-                className="yt-skip-btn"
-                onClick={handlePrev}
-                title="Previous"
-                disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === 0}
-                aria-label="Previous"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
-                  <polygon points="20,5 8,12 20,19" fill="currentColor"/>
-                </svg>
-              </button>
-              {ytPlayState === 'FW' ? (
+      <div className="min-h-screen pt-20 pb-16 px-4 flex flex-col items-center">
+        {/* Main Cassette Section */}
+        <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-8">
+          {/* Cassette Component */}
+          <div className="w-full flex flex-col items-center gap-6">
+            <Cassette 
+              label={currentLabel} 
+              cover={currentCover} 
+              bodyColor={currentBodyColor}
+              playState={ytPlayState}
+              progress={currentProgress}
+            />
+            
+            {/* Playback Controls */}
+            <div className="flex justify-center items-center bg-black/50 backdrop-blur-md rounded-full px-4 py-1 shadow-lg">
+              <div className="flex items-center gap-3">
                 <button
-                  className="yt-play-btn"
-                  onClick={handlePause}
-                  title="Pause"
-                  disabled={!playlistId || !ytReady}
-                  aria-label="Pause"
+                  className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  onClick={handlePrev}
+                  title="Previous"
+                  disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === 0}
+                  aria-label="Previous"
                 >
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="7" width="5" height="18" rx="2" fill="currentColor"/>
-                    <rect x="19" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                    <polygon points="20,5 8,12 20,19" fill="currentColor"/>
                   </svg>
                 </button>
-              ) : (
+                {ytPlayState === 'FW' ? (
+                  <button
+                    className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    onClick={handlePause}
+                    title="Pause"
+                    disabled={!playlistId || !ytReady}
+                    aria-label="Pause"
+                  >
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="8" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                      <rect x="19" y="7" width="5" height="18" rx="2" fill="currentColor"/>
+                    </svg>
+                  </button>
+                ) : (
+                  <button
+                    className="w-12 h-12 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                    onClick={handlePlay}
+                    title="Play"
+                    disabled={!playlistId || !ytReady}
+                    aria-label="Play"
+                  >
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <polygon points="10,7 26,16 10,25" fill="currentColor"/>
+                    </svg>
+                  </button>
+                )}
                 <button
-                  className="yt-play-btn"
-                  onClick={handlePlay}
-                  title="Play"
-                  disabled={!playlistId || !ytReady}
-                  aria-label="Play"
+                  className="w-8 h-8 flex items-center justify-center text-white/90 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  onClick={handleNext}
+                  title="Next"
+                  disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === playlistDurations.length - 1}
+                  aria-label="Next"
                 >
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <polygon points="10,7 26,16 10,25" fill="currentColor"/>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="18" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
+                    <polygon points="4,5 16,12 4,19" fill="currentColor"/>
                   </svg>
                 </button>
-              )}
-              <button
-                className="yt-skip-btn"
-                onClick={handleNext}
-                title="Next"
-                disabled={!playlistId || !ytReady || player?.getPlaylistIndex?.() === playlistDurations.length - 1}
-                aria-label="Next"
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="18" y="5" width="3" height="14" rx="1.5" fill="currentColor"/>
-                  <polygon points="4,5 16,12 4,19" fill="currentColor"/>
-                </svg>
-              </button>
+              </div>
             </div>
           </div>
+
+          {/* Video Player Section */}
+          {playlistId && (
+            <div className="w-full max-w-[356px] aspect-video bg-black rounded-lg overflow-hidden shadow-xl">
+              <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -817,20 +825,25 @@ function App() {
       )}
 
       {/* Bottom Bar for YouTube compliance */}
-      <div className="yt-bottom-bar">
-        <div className="yt-bottom-bar-content">
-          <div className="yt-track-info">
-            <div className="yt-track-title">{currentVideoTitle || 'No track playing'}</div>
-            <div className="yt-track-number">
+      <div className="fixed bottom-0 left-0 right-0 h-[60px] bg-black/80 backdrop-blur-md flex items-center justify-between z-[2000]">
+        <div className="flex-1 min-w-0 px-4 flex items-start justify-start text-white">
+          <div className="flex-1 min-w-0 mr-4 flex flex-col justify-center">
+            <div className="text-sm font-medium mb-0.5 whitespace-nowrap overflow-hidden text-ellipsis text-left">
+              {currentVideoTitle || 'No track playing'}
+            </div>
+            <div className="text-xs text-white/70 text-left">
               {playlistLength > 0 && typeof currentTrackIndex === 'number' 
                 ? `${currentTrackIndex + 1}/${playlistLength}` 
                 : ''}
             </div>
           </div>
         </div>
-        {/* Optionally, show a static thumbnail or icon here for compliance */}
-        <div className="yt-bottom-bar-thumb" onClick={handleYouTubeClick}>
-          <div className="yt-thumb-video">
+        {/* Thumbnail section */}
+        <div 
+          className="w-[356px] h-[200px] flex-shrink-0 overflow-hidden relative mr-1 mb-1 cursor-pointer"
+          onClick={handleYouTubeClick}
+        >
+          <div className="w-full h-full relative">
             {/* You could render a static image or YouTube logo here */}
           </div>
         </div>

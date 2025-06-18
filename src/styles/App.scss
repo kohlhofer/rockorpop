@@ -70,212 +70,147 @@ body {
   }
 
   &.background-1 {
-    // Default - keep existing gradient
+    // Default - subtle gradient
+    background: linear-gradient(135deg, #f5f5f5, #e5e5e5);
   }
   
   &.background-2 {
-    // Checkerboard - using Light Grey and Cream
+    // Checkerboard
+    background-color: #f5f5f5;
     background-image: 
-      linear-gradient(45deg, #D0C5B8 25%, transparent 25%), 
-      linear-gradient(-45deg, #D0C5B8 25%, transparent 25%), 
-      linear-gradient(45deg, transparent 75%, #D0C5B8 75%), 
-      linear-gradient(-45deg, transparent 75%, #D0C5B8 75%);
-    background-size: 120px 120px;
-    background-position: 0 0, 0 60px, 60px -60px, -60px 0px;
-    background-color: #F5F0E8;
+      linear-gradient(45deg, #e0e0e0 25%, transparent 25%), 
+      linear-gradient(-45deg, #e0e0e0 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e0e0e0 75%),
+      linear-gradient(-45deg, transparent 75%, #e0e0e0 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
   }
   
   &.background-3 {
-    // Big Diagonal Stripes - using Orange and Red tones
-    background: repeating-linear-gradient(
+    // Diagonal Stripes
+    background-color: #f5f5f5;
+    background-image: repeating-linear-gradient(
       45deg,
-      #FF6C24,
-      #FF6C24 40px,
-      #DF4900 40px,
-      #DF4900 80px,
-      #F44336 80px,
-      #F44336 120px,
-      #D32F2F 120px,
-      #D32F2F 160px
+      #e0e0e0,
+      #e0e0e0 10px,
+      #f5f5f5 10px,
+      #f5f5f5 20px
     );
   }
   
   &.background-4 {
-    // Pride - using our vibrant shell colors with white fade gradient
-    background: 
-      linear-gradient(
-        to bottom,
-        transparent 0%,
-        transparent 30%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0.7) 80%,
-        rgba(255, 255, 255, 0.95) 100%
-      ),
-      linear-gradient(
-        to right,
-        #F44336 0%, #F44336 16.66%,
-        #FF6C24 16.66%, #FF6C24 33.33%,
-        #FFD54F 33.33%, #FFD54F 50%,
-        #4CAF50 50%, #4CAF50 66.66%,
-        #0E9DCC 66.66%, #0E9DCC 83.33%,
-        #7B1FA2 83.33%, #7B1FA2 100%
-      );
+    // Pride colors
+    background: linear-gradient(
+      to bottom,
+      #ff0018 0%,
+      #ff0018 16.666%,
+      #ffa52c 16.666%,
+      #ffa52c 33.333%,
+      #ffff41 33.333%,
+      #ffff41 50%,
+      #008018 50%,
+      #008018 66.666%,
+      #0000f9 66.666%,
+      #0000f9 83.333%,
+      #86007d 83.333%,
+      #86007d 100%
+    );
   }
   
   &.background-5 {
-    // Psychedelic - using Pink, Purple, and Blue (smoothly animated background colors)
-    background: radial-gradient(circle at 20% 50%, #F48FB1 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, #7B1FA2 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, #0E9DCC 0%, transparent 50%),
-                radial-gradient(circle at 0% 100%, #FFD54F 0%, transparent 50%),
-                radial-gradient(circle at 80% 100%, #FF6C24 0%, transparent 50%),
-                linear-gradient(135deg, #F48FB1, #7B1FA2, #0E9DCC);
-    background-attachment: fixed;
-    background-size: 200% 200%;
-    animation: psychedelicSmooth 12s ease-in-out infinite;
+    // Psychedelic
+    background: 
+      radial-gradient(circle at 50% 50%, rgba(255, 0, 0, 0.5), rgba(255, 0, 0, 0) 70.71%),
+      radial-gradient(circle at 6.7% 75%, rgba(0, 255, 0, 0.5), rgba(0, 255, 0, 0) 70.71%),
+      radial-gradient(circle at 93.3% 75%, rgba(0, 0, 255, 0.5), rgba(0, 0, 255, 0) 70.71%) beige;
+    background-size: 100% 100%;
   }
   
   &.background-6 {
-    // Scottish Tartan - muted shell colors
-    background-color: #F5F0E8;
+    // Wood Grain
+    background-color: #d4a373;
     background-image: 
-      repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 15px,
-        rgba(14, 157, 204, 0.4) 15px,
-        rgba(14, 157, 204, 0.4) 25px,
-        transparent 25px,
-        transparent 45px,
-        rgba(76, 175, 80, 0.4) 45px,
-        rgba(76, 175, 80, 0.4) 65px,
-        transparent 65px,
-        transparent 75px,
-        rgba(244, 67, 54, 0.5) 75px,
-        rgba(244, 67, 54, 0.5) 80px,
-        transparent 80px,
-        transparent 100px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        transparent 0px,
-        transparent 12px,
-        rgba(255, 108, 36, 0.4) 12px,
-        rgba(255, 108, 36, 0.4) 28px,
-        transparent 28px,
-        transparent 50px,
-        rgba(123, 31, 162, 0.4) 50px,
-        rgba(123, 31, 162, 0.4) 70px,
-        transparent 70px,
-        transparent 85px,
-        rgba(255, 213, 79, 0.4) 85px,
-        rgba(255, 213, 79, 0.4) 90px,
-        transparent 90px,
-        transparent 100px
-      ),
-      repeating-linear-gradient(
-        0deg,
-        rgba(167, 167, 167, 0.2) 0px,
-        rgba(167, 167, 167, 0.2) 3px,
-        transparent 3px,
-        transparent 20px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(131, 131, 131, 0.2) 0px,
-        rgba(131, 131, 131, 0.2) 2px,
-        transparent 2px,
-        transparent 15px
-      );
+      linear-gradient(90deg, rgba(255,255,255,.07) 50%, transparent 50%),
+      linear-gradient(90deg, rgba(255,255,255,.13) 50%, transparent 50%),
+      linear-gradient(90deg, transparent 50%, rgba(255,255,255,.17) 50%),
+      linear-gradient(90deg, transparent 50%, rgba(255,255,255,.19) 50%);
+    background-size: 13px, 29px, 37px, 53px;
   }
   
   &.background-7 {
-    // Denim - using Blue tones
-    background-color: #0E9DCC;
+    // Denim
+    background-color: #1e3a8a;
     background-image: 
-      radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0),
-      linear-gradient(45deg, rgba(0,128,170,0.3) 25%, transparent 25%),
-      linear-gradient(-45deg, rgba(0,128,170,0.3) 25%, transparent 25%);
-    background-size: 20px 20px, 40px 40px, 40px 40px;
+      linear-gradient(335deg, #172554 23px, transparent 23px),
+      linear-gradient(155deg, #172554 23px, transparent 23px),
+      linear-gradient(335deg, #172554 23px, transparent 23px),
+      linear-gradient(155deg, #172554 23px, transparent 23px);
+    background-size: 58px 58px;
+    background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
   }
   
   &.background-8 {
-    // Neon Grid - using Green and Purple
-    background-color: #1a1a1a;
+    // Neon Grid
+    background-color: #000000;
     background-image: 
-      linear-gradient(rgba(76, 175, 80, 0.3) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(123, 31, 162, 0.3) 1px, transparent 1px);
-    background-size: 50px 50px;
-    box-shadow: inset 0 0 100px rgba(76, 175, 80, 0.1);
+      linear-gradient(#ff00ea 1px, transparent 1px),
+      linear-gradient(90deg, #ff00ea 1px, transparent 1px),
+      linear-gradient(#00ffff 1px, transparent 1px),
+      linear-gradient(90deg, #00ffff 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+    background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
   }
   
   &.background-9 {
-    // Notebook Paper - school lined paper
-    background-color: #fefefe;
-    background-image: 
-      linear-gradient(90deg, transparent 24px, #F44336 24px, #F44336 25px, transparent 25px),
-      repeating-linear-gradient(
-        0deg,
-        transparent 0px,
-        transparent 23px,
-        rgba(14, 157, 204, 0.3) 23px,
-        rgba(14, 157, 204, 0.3) 24px,
-        transparent 24px,
-        transparent 47px
-      );
-    background-size: 100% 100%, 100% 24px;
+    // Notebook Paper
+    background-color: #fff;
+    background-image:
+      linear-gradient(90deg, transparent 79px, #abced4 79px, #abced4 81px, transparent 81px),
+      linear-gradient(#eee .1em, transparent .1em);
+    background-size: 100% 1.2em;
   }
   
   &.background-10 {
-    // Vinyl Records - using Dark Grey base
-    background-color: #4B4B4B;
-    background-image: 
-      radial-gradient(circle at 50% 50%, transparent 20px, rgba(167,167,167,0.2) 21px, rgba(167,167,167,0.2) 22px, transparent 23px),
-      radial-gradient(circle at 50% 50%, transparent 40px, rgba(167,167,167,0.1) 41px, rgba(167,167,167,0.1) 42px, transparent 43px),
-      radial-gradient(circle at 50% 50%, transparent 60px, rgba(167,167,167,0.1) 61px, rgba(167,167,167,0.1) 62px, transparent 63px);
-    background-size: 120px 120px;
-    background-position: 0 0, 60px 60px, 30px 30px;
+    // Vinyl Records
+    background-color: #000000;
+    background-image: repeating-radial-gradient(
+      circle at 50% 50%,
+      transparent 0,
+      transparent 9px,
+      rgba(255,255,255,.07) 10px,
+      rgba(255,255,255,.07) 11px
+    );
+    background-size: 30px 30px;
   }
   
   &.background-11 {
-    // Soft Lavender - neutral pastel
-    background: linear-gradient(
-      135deg,
-      #f3f0ff 0%,
-      #e8e2ff 50%,
-      #f0ebff 100%
-    );
+    // Soft Lavender
+    background: linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%);
   }
   
   &.background-12 {
-    // Warm Cream - neutral pastel using shell colors
-    background: linear-gradient(
-      45deg,
-      #F5F0E8 0%,
-      #F8F3EB 50%,
-      #FAF5EE 100%
-    );
+    // Warm Cream
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
   }
   
   &.background-13 {
-    // Isometric Cubes - 3D geometric pattern (low contrast)
-    background-color: #F5F0E8;
-    background-image: 
-      linear-gradient(30deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
-      linear-gradient(150deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
-      linear-gradient(30deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
-      linear-gradient(150deg, #E8E2DC 12%, transparent 12.5%, transparent 87%, #E8E2DC 87.5%, #E8E2DC),
-      linear-gradient(60deg, #D0C5B8 25%, transparent 25.5%, transparent 75%, #D0C5B8 75%, #D0C5B8),
-      linear-gradient(60deg, #D0C5B8 25%, transparent 25.5%, transparent 75%, #D0C5B8 75%, #D0C5B8);
+    // Isometric Cubes
+    background-color: #dcdcdc;
+    background-image:
+      linear-gradient(30deg, #979797 12%, transparent 12.5%, transparent 87%, #979797 87.5%, #979797),
+      linear-gradient(150deg, #979797 12%, transparent 12.5%, transparent 87%, #979797 87.5%, #979797),
+      linear-gradient(30deg, #979797 12%, transparent 12.5%, transparent 87%, #979797 87.5%, #979797),
+      linear-gradient(150deg, #979797 12%, transparent 12.5%, transparent 87%, #979797 87.5%, #979797),
+      linear-gradient(60deg, #97979777 25%, transparent 25.5%, transparent 75%, #97979777 75%, #97979777),
+      linear-gradient(60deg, #97979777 25%, transparent 25.5%, transparent 75%, #97979777 75%, #97979777);
     background-size: 80px 140px;
     background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
   }
   
   &.background-14 {
-    // Dot Grid - notebook style
-    background-color: #fefefe;
-    background-image: 
-      radial-gradient(circle at 1px 1px, rgba(14, 157, 204, 0.4) 1px, transparent 0);
+    // Dot Grid
+    background-color: #f8fafc;
+    background-image: radial-gradient(#94a3b8 1px, transparent 1px);
     background-size: 20px 20px;
   }
   
@@ -313,10 +248,6 @@ body {
 }
 
 .cassette-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
   position: relative;
 }
 
@@ -732,173 +663,42 @@ body {
 
 // Share Dialog
 .dialog-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 2500;
-  backdrop-filter: blur(4px);
+  @apply fixed inset-0 bg-black/50 backdrop-blur-sm z-[2001];
 }
 
 .share-dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-  border: 2px solid #6c757d;
-  border-radius: 12px;
-  box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  z-index: 2501;
-  width: 90%;
-  max-width: 500px;
-  animation: dialogSlideIn 0.2s ease-out;
-}
-
-@keyframes dialogSlideIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
+  @apply fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl z-[2002] overflow-hidden;
 }
 
 .dialog-header {
-  position: relative;
-  padding: 20px 24px 16px;
-  border-bottom: 2px solid #dee2e6;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  border-radius: 10px 10px 0 0;
+  @apply flex items-center justify-between px-6 py-4 border-b border-gray-200;
 
   h3 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
-    color: #495057;
-    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
-    padding-right: 40px; // Add space for close button
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: transparent;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    color: #495057;
-    padding: 6px 8px;
-    transition: all 0.2s ease;
-    font-weight: bold;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.9);
-      border: 2px solid rgba(108, 117, 125, 0.4);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    }
-
-    &:active {
-      transform: translateY(0);
-      background: rgba(255, 255, 255, 1);
-      border-color: rgba(108, 117, 125, 0.6);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
+    @apply text-lg font-semibold text-gray-900;
   }
 }
 
 .dialog-content {
-  padding: 20px 24px 24px;
+  @apply p-6;
 
   p {
-    margin: 0 0 16px;
-    color: #495057;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  .share-note {
-    margin: 16px 0 0;
-    font-size: 12px;
-    color: #6c757d;
-    font-style: italic;
+    @apply text-gray-600 mb-4;
   }
 }
 
 .url-container {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  @apply flex gap-3;
 }
 
 .url-input {
-  flex: 1;
-  padding: 10px 12px;
-  border: 2px solid #ced4da;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-  color: #495057;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-    background: #ffffff;
-    box-shadow: 
-      inset 0 1px 3px rgba(0, 0, 0, 0.1),
-      0 0 0 3px rgba(0, 123, 255, 0.1);
-  }
+  @apply flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50;
 }
 
 .copy-btn {
-  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-  color: white;
-  border: 2px solid #0056b3;
-  border-radius: 6px;
-  padding: 10px 16px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
-    transform: translateY(-1px);
-    box-shadow: 
-      0 4px 8px rgba(0, 0, 0, 0.15),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 
-      0 1px 2px rgba(0, 0, 0, 0.1),
-      inset 0 1px 3px rgba(0, 0, 0, 0.2);
-  }
+  @apply px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
 
   &.success {
-    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
-    border-color: #1e7e34;
-    
-    &:hover {
-      background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
-    }
+    @apply bg-green-600 hover:bg-green-700;
   }
 }
 
