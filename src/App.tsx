@@ -144,24 +144,6 @@ const loadFromUrlParams = () => {
 };
 
 function App() {
-  const labelOptions = [
-    'This tape is for you',
-    'Summer Vibes \'24',
-    'Road Trip Mix',
-    'Late Night Sessions',
-    'Workout Beats',
-    'Chill & Study',
-    'Party Anthems',
-    'Acoustic Sessions',
-    'Throwback Hits',
-    'Coffee Shop Jazz',
-    'Rainy Day Blues',
-    'Feel Good Mix',
-    'Dance Floor Fire',
-    'Midnight Drive',
-    'Sunday Morning'
-  ];
-
   // Load initial settings from URL or use random defaults
   const initialSettings = loadFromUrlParams();
 
@@ -178,15 +160,12 @@ function App() {
   const [player, setPlayer] = useState<any>(null);
   const [ytReady, setYtReady] = useState(false);
   const [ytPlayState, setYtPlayState] = useState<'STOP' | 'FW'>('STOP');
-  const [currentIndex, setCurrentIndex] = useState(0);
   const playerRef = useRef<HTMLDivElement>(null);
-  const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
+  const { playlistId } = extractYouTubeIds(playlistUrl);
   const [currentProgress, setCurrentProgress] = useState(0);
   const [playlistLength, setPlaylistLength] = useState<number>(0);
-  const progressIntervalId = useRef<number | null>(null);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
-  const [currentVideoId, setCurrentVideoId] = useState<string>('');
   const [playerResetKey, setPlayerResetKey] = useState(0);
   
   const totalCovers = 5;
@@ -249,226 +228,149 @@ function App() {
     
     const initializePlayer = () => {
       const playerTarget = playerRef.current;
-      const newPlayer = new (window as any).YT.Player(playerTarget, {
-        height: '200',
-        width: '356',
+      if (!playerTarget) return;
+      
+      // Clear any existing player
+      if (player) {
+        player.destroy();
+      }
+      
+      // Initialize new player
+      const playerConfig = {
+        height: '100%',
+        width: '100%',
         playerVars: {
           listType: 'playlist',
           list: playlistId,
-          autoplay: 0,
           controls: 0,
+          disablekb: 1,
           modestbranding: 1,
+          playsinline: 1,
           rel: 0,
-          showinfo: 0,
+          showinfo: 0
         },
         events: {
           onReady: (event: any) => {
-            const player = event.target;
-            setPlayer(player);
-            setYtPlayState('STOP');
-            
-            // Get initial playlist info
-            const playlist = player.getPlaylist();
-            if (playlist) {
-              setPlaylistLength(playlist.length);
-              
-              // Get current track info
-              const currentIndex = player.getPlaylistIndex();
-              setCurrentTrackIndex(currentIndex);
-              
-              // Get video data
-              const videoData = player.getVideoData();
+            setPlayer(event.target);
+            // Get initial video title
+            try {
+              const videoData = event.target.getVideoData();
               if (videoData) {
                 setCurrentVideoTitle(videoData.title || '');
-                setCurrentVideoId(videoData.video_id || '');
               }
               
-              // Reset to first video and pause
-              player.playVideoAt(0);
-              player.pauseVideo();
+              // Get playlist length
+              setPlaylistLength(event.target.getPlaylist()?.length || 0);
+            } catch (e) {
+              console.error('Error getting video data:', e);
             }
           },
           onStateChange: (event: any) => {
-            const PlayerState = (window as any).YT.PlayerState;
-            const currentPlayer = event.target;
-            
-            const currentState = {
-              state: event.data,
-              stateName: Object.keys(PlayerState).find(key => PlayerState[key] === event.data),
-              currentIndex: currentPlayer.getPlaylistIndex(),
-              currentTime: currentPlayer.getCurrentTime(),
-              currentDuration: currentPlayer.getDuration()
-            };
-            
-            // Update track info on any state change
-            updateTrackInfo(currentPlayer);
-            
-            // Handle state-specific actions
-            switch (event.data) {
-              case PlayerState.PLAYING:
-                setYtPlayState('FW');
-                break;
+            try {
+              const videoData = event.target.getVideoData();
+              if (videoData) {
+                setCurrentVideoTitle(videoData.title || '');
+              }
               
-              case PlayerState.PAUSED:
-                setYtPlayState('STOP');
-                // Update progress one last time
-                const progress = calculatePlaylistProgress();
-                if (!isNaN(progress)) {
-                  setCurrentProgress(progress);
-                }
-                break;
+              // Update playlist length
+              setPlaylistLength(event.target.getPlaylist()?.length || 0);
               
-              case PlayerState.ENDED:
-              case PlayerState.UNSTARTED:
-                setYtPlayState('STOP');
-                break;
-              
-              case PlayerState.BUFFERING:
-                // Don't change anything during buffering
-                break;
-                
-              default:
-                console.log('Unhandled player state:', event.data);
-                break;
+              // Update current track index
+              setCurrentTrackIndex(event.target.getPlaylistIndex());
+            } catch (e) {
+              console.error('Error getting video data:', e);
             }
           },
           onError: (event: any) => {
             console.error('YouTube player error:', event.data);
           }
-        },
-      });
+        }
+      };
+      
+      // Create new player instance
+      new (window as any).YT.Player(playerTarget, playerConfig);
     };
 
-    // Always destroy and recreate the player on playerResetKey change
     initializePlayer();
-    return () => {
-      if (player) {
-        try {
-          player.destroy();
-        } catch (e) {
-          console.error('Error destroying player:', e);
-        }
-      }
-    };
   }, [ytReady, playlistId, playerResetKey]);
 
-  // Calculate progress based on current position in playlist
-  const calculatePlaylistProgress = () => {
-    if (!player || !playlistLength) return 0;
+  // Calculate and update progress
+  useEffect(() => {
+    if (!player) return;
+    
+    const updateProgress = () => {
+      try {
+        if (player.getCurrentTime && player.getDuration) {
+          const current = player.getCurrentTime();
+          const total = player.getDuration();
+          if (current && total) {
+            setCurrentProgress((current / total) * 100);
+          }
+        }
+      } catch (e) {
+        console.error('Error updating progress:', e);
+      }
+    };
+    
+    const intervalId = setInterval(updateProgress, 1000);
+    return () => clearInterval(intervalId);
+  }, [player]);
+
+  // Handle play state changes
+  useEffect(() => {
+    if (!player) return;
     
     try {
-      const currentIndex = player.getPlaylistIndex();
-      const currentTime = player.getCurrentTime();
-      const currentDuration = player.getDuration();
-      
-      // Basic progress calculation:
-      // 1. Each track contributes (100/playlistLength)% to total progress
-      // 2. Current track progress is (currentTime/currentDuration) of its share
-      const progressPerTrack = 100 / playlistLength;
-      const completedProgress = currentIndex * progressPerTrack;
-      const currentTrackProgress = currentDuration ? (currentTime / currentDuration) * progressPerTrack : 0;
-      
-      return Math.min(100, completedProgress + currentTrackProgress);
-    } catch (error) {
-      return 0;
-    }
-  };
-
-  // Update video info and progress when track changes
-  const updateTrackInfo = (currentPlayer: any) => {
-    const videoData = currentPlayer.getVideoData();
-    if (videoData) {
-      setCurrentVideoTitle(videoData.title || '');
-      setCurrentVideoId(videoData.video_id || '');
-      setCurrentTrackIndex(currentPlayer.getPlaylistIndex());
-      
-      // Update playlist length
-      const playlist = currentPlayer.getPlaylist();
-      if (playlist) {
-        setPlaylistLength(playlist.length);
+      if (ytPlayState === 'STOP') {
+        player.pauseVideo();
+      } else if (ytPlayState === 'FW') {
+        player.playVideo();
       }
-      
-      // Force a progress update when track changes
-      const progress = calculatePlaylistProgress();
-      if (!isNaN(progress)) {
-        setCurrentProgress(progress);
-      }
+    } catch (e) {
+      console.error('Error controlling playback:', e);
     }
-  };
+  }, [ytPlayState, player]);
 
-  // Playback controls
   const handlePlay = () => {
-    if (player) {
-      player.playVideo();
-    }
+    setYtPlayState('FW');
   };
-  
+
   const handlePause = () => {
-    if (player) {
-      player.pauseVideo();
-    }
+    setYtPlayState('STOP');
   };
-  
+
   const handlePrev = () => {
     if (!player) return;
     try {
-      const currentIndex = player.getPlaylistIndex();
-      if (currentIndex > 0) {
-        player.previousVideo();
-        setCurrentTrackIndex(currentIndex - 1);
-        // Update video info immediately
-        const videoData = player.getVideoData();
-        setCurrentVideoTitle(videoData?.title || '');
-        setCurrentVideoId(videoData?.video_id || '');
-      }
+      player.previousVideo();
+      const videoData = player.getVideoData();
+      setCurrentVideoTitle(videoData?.title || '');
     } catch (e) {
-      console.log('Error handling prev:', e);
+      console.error('Error playing previous video:', e);
     }
   };
-  
+
   const handleNext = () => {
     if (!player) return;
     try {
-      const currentIndex = player.getPlaylistIndex();
-      const playlistLength = player.getPlaylist()?.length || 0;
-      if (currentIndex < playlistLength - 1) {
-        player.nextVideo();
-        setCurrentTrackIndex(currentIndex + 1);
-        // Update video info immediately
-        const videoData = player.getVideoData();
-        setCurrentVideoTitle(videoData?.title || '');
-        setCurrentVideoId(videoData?.video_id || '');
-      }
+      player.nextVideo();
+      const videoData = player.getVideoData();
+      setCurrentVideoTitle(videoData?.title || '');
     } catch (e) {
-      console.log('Error handling next:', e);
+      console.error('Error playing next video:', e);
     }
-  };
-
-  // Event handlers
-  const handleCoverChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentCover(parseInt(e.target.value));
-  };
-
-  const handleBodyColorChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentBodyColor(parseInt(e.target.value));
   };
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentLabel(e.target.value);
   };
 
-  const handleBackgroundChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCurrentBackground(parseInt(e.target.value));
-  };
-
   const handlePlaylistUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlaylistUrl(e.target.value);
   };
 
-  // Share tape functionality
   const handleShareTape = () => {
     setShareDialogOpen(true);
-    setCopySuccess(false);
   };
 
   const handleCopyUrl = async () => {
@@ -478,75 +380,34 @@ function App() {
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
       console.error('Failed to copy URL:', err);
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = window.location.href;
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setCopySuccess(true);
-      setTimeout(() => setCopySuccess(false), 2000);
     }
   };
-
-  const handleYouTubeClick = () => {
-    if (!player) return;
-    try {
-      const videoData = player.getVideoData();
-      const videoId = videoData?.video_id;
-      if (videoId) {
-        const url = `https://www.youtube.com/watch?v=${videoId}&list=${playlistId}`;
-        window.open(url, '_blank');
-      }
-    } catch (e) {
-      console.log('Error opening YouTube:', e);
-    }
-  };
-
-  // TapeDropdown state: no preset selected by default
-  const [selectedPreset, setSelectedPreset] = useState<string>('');
 
   const handlePresetSelect = (selectedUrl: string) => {
-    if (!selectedUrl) return;
-    // Parse params from selectedUrl and update state
-    const params = new URLSearchParams(selectedUrl.startsWith('?') ? selectedUrl.slice(1) : selectedUrl);
+    // Remove leading ? if present
+    const cleanUrl = selectedUrl.startsWith('?') ? selectedUrl.slice(1) : selectedUrl;
+    const params = new URLSearchParams(cleanUrl);
+    
+    // Update all relevant state
     const cover = parseInt(params.get('cover') || '1');
-    const shell = parseInt(params.get('shell') || '1');
-    const bg = parseInt(params.get('bg') || '1');
-    const label = params.get('label') ? decodeURIComponent(params.get('label')!) : '';
-    const playlist = params.get('playlist') || '';
-    const video = params.get('video') || '';
+    const bodyColor = parseInt(params.get('shell') || '1');
+    const background = parseInt(params.get('bg') || '1');
+    const label = params.get('label') ? decodeURIComponent(params.get('label')!) : currentLabel;
+    const playlistId = params.get('playlist') || '';
+    const videoId = params.get('video') || '';
+    
     setCurrentCover(cover);
-    setCurrentBodyColor(shell);
-    setCurrentBackground(bg);
+    setCurrentBodyColor(bodyColor);
+    setCurrentBackground(background);
     setCurrentLabel(label);
-    setPlaylistUrl(reconstructYouTubeUrl(playlist, video));
-    updateUrlParams(cover, shell, bg, label, playlist, video);
-    setSelectedPreset(''); // Reset dropdown to label
+    setPlaylistUrl(reconstructYouTubeUrl(playlistId, videoId));
   };
 
   // Add useEffect to increment playerResetKey when playlistUrl changes
   useEffect(() => {
-    setPlayerResetKey((k: number) => k + 1);
-    // Reset progress when playlist changes
+    setPlayerResetKey(k => k + 1);
     setCurrentProgress(0);
   }, [playlistUrl]);
-
-  // Start progress tracking interval when player is ready
-  useEffect(() => {
-    if (!player) return;
-    
-    // Update progress every second
-    const intervalId = window.setInterval(() => {
-      const progress = calculatePlaylistProgress();
-      setCurrentProgress(progress);
-    }, 1000);
-    
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [player]);
 
   // Update document title when label or track changes
   useEffect(() => {
@@ -570,7 +431,7 @@ function App() {
           </button>
           <TapeDropdown
             options={tapePresets.map(p => ({ label: p.label, value: p.url }))}
-            value={selectedPreset}
+            value={playlistUrl}
             onSelect={handlePresetSelect}
             label="Tapes..."
           />

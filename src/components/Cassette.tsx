@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import reel from '../assets/reel.svg';
 import tape1 from '../assets/tapes/1.svg';
 import tape2 from '../assets/tapes/2.svg';

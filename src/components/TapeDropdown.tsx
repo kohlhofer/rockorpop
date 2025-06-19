@@ -30,11 +30,6 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (option: Option) => {
-    onSelect(option.value);
-    setOpen(false);
-  };
-
   return (
     <div className="relative inline-block">
       <button
