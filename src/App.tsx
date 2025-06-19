@@ -67,6 +67,30 @@ const updateUrlParams = (cover: number, bodyColor: number, background: number, l
   window.history.replaceState(null, '', newUrl);
 };
 
+// Tape presets for dropdown
+const tapePresets = [
+  {
+    label: 'POP Top50 - USA',
+    url: '?cover=5&shell=2&bg=15&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
+  },
+  {
+    label: 'Campfire Classics',
+    url: '?shell=10&bg=6&label=Campfire%20Classics&playlist=RDCLAK5uy_liwwwIG8z4P25AWeLZ2Nvydx1GwbvndEI',
+  },
+  {
+    label: 'Back to School',
+    url: '?cover=2&bg=9&label=Back%20to%20School&playlist=RDCLAK5uy_leoTLrB1K_2VcTWqds82dBcjBSjrRfJxw',
+  },
+  {
+    label: 'BOC',
+    url: '?cover=4&bg=13&label=BOC&playlist=PL221B13914A7EF3A2',
+  },
+  {
+    label: '80s German Synth',
+    url: '?cover=2&shell=9&bg=8&label=80s%20German%20Synth&playlist=PL9NOKG-8bUwqcG2Dd8GUKzwSG3di9mQ1m',
+  },
+];
+
 // Utility function to load settings from URL parameters
 const loadFromUrlParams = () => {
   const labelOptions = [
@@ -89,6 +113,26 @@ const loadFromUrlParams = () => {
 
   const params = new URLSearchParams(window.location.search);
   
+  // If no URL parameters, load a random preset
+  if (!params.toString()) {
+    const randomPreset = tapePresets[Math.floor(Math.random() * tapePresets.length)];
+    const presetParams = new URLSearchParams(randomPreset.url.startsWith('?') ? randomPreset.url.slice(1) : randomPreset.url);
+    
+    // Update URL with the random preset
+    const newUrl = window.location.pathname + randomPreset.url;
+    window.history.replaceState(null, '', newUrl);
+    
+    return {
+      cover: parseInt(presetParams.get('cover') || '1'),
+      bodyColor: parseInt(presetParams.get('shell') || '1'),
+      background: parseInt(presetParams.get('bg') || '1'),
+      label: presetParams.get('label') ? decodeURIComponent(presetParams.get('label')!) : labelOptions[Math.floor(Math.random() * labelOptions.length)],
+      playlistId: presetParams.get('playlist') || '',
+      videoId: presetParams.get('video') || ''
+    };
+  }
+  
+  // Otherwise, load from URL parameters as before
   return {
     cover: parseInt(params.get('cover') || '0') || Math.floor(Math.random() * 5) + 1,
     bodyColor: parseInt(params.get('shell') || '0') || Math.floor(Math.random() * 10) + 1,
@@ -459,31 +503,6 @@ function App() {
       console.log('Error opening YouTube:', e);
     }
   };
-
-  // Tape presets for dropdown
-  const tapePresets = [
-    {
-      label: 'POP Top50 - USA',
-      url: '?cover=5&shell=2&bg=15&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
-    },
-    {
-      label: 'Campfire Classics',
-      url: '?shell=10&bg=6&label=Campfire%20Classics&playlist=RDCLAK5uy_liwwwIG8z4P25AWeLZ2Nvydx1GwbvndEI',
-    },
-    {
-      label: 'Back to School',
-      url: '?cover=2&bg=9&label=Back%20to%20School&playlist=RDCLAK5uy_leoTLrB1K_2VcTWqds82dBcjBSjrRfJxw',
-    },
-    {
-      label: 'BOC',
-      url: '?cover=4&bg=13&label=BOC&playlist=PL221B13914A7EF3A2',
-    },
-    {
-      label: '80s German Synth',
-      url: '?cover=2&shell=9&bg=8&label=80s%20German%20Synth&playlist=PL9NOKG-8bUwqcG2Dd8GUKzwSG3di9mQ1m',
-    },
-    // Add more presets here as needed
-  ];
 
   // TapeDropdown state: no preset selected by default
   const [selectedPreset, setSelectedPreset] = useState<string>('');
