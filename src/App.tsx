@@ -93,6 +93,10 @@ const tapePresets = [
     label: '80s All The Way',
     url: '?cover=3&shell=9&bg=18&label=80s%20all%20the%20way&playlist=RDCLAK5uy_nKfNEHo6Yu1lao4pamzirHgatT0liBhzY',
   },
+  {
+    label: "An Afternoon's Electronica",
+    url: '?cover=5&shell=7&bg=3&label=An%20Afternoon%27s%20Electronica&playlist=PLLXJQ4obAI9pgYJsE3TCInAqkMQKvCcMi&video=4yxQzAUMdfQ',
+  },
 ];
 
 // Utility function to load settings from URL parameters
