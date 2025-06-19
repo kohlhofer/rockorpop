@@ -335,14 +335,14 @@ body {
       ),
       linear-gradient(
         135deg,
-        #ff61d5 0%,
-        #b318f0 20%,
-        #4405fc 40%,
-        #00d8ff 60%,
-        #00fff9 80%,
-        #ff61d5 100%
+        #ff61d5,
+        #b318f0,
+        #4405fc,
+        #00d8ff,
+        #00fff9,
+        #ff61d5
       );
-    background-size: 100% 100%, 100% 100%;
+    background-size: 100% 100%, 400% 400%;
     animation: holoShift 8s linear infinite;
   }
 
@@ -429,34 +429,33 @@ body {
     background-image: 
       radial-gradient(circle at center, #4ecdc4 10%, transparent 10%),
       radial-gradient(circle at center, #ffd93d 20%, transparent 20%);
-    background-size: 40px 40px, 60px 60px;
-    background-position: 0 0, 20px 20px;
-    animation: bubbleFloat 20s linear infinite;
+    background-size: 40px 40px;
+    background-position: 0 0;
+    animation: bubbleFloat 3s linear infinite;
   }
 
   &.background-23 {
     // Digital Rain
-    background:
-      linear-gradient(90deg,
-        transparent 0,
-        transparent 29px,
-        rgba(0, 255, 0, 0.1) 29px,
-        rgba(0, 255, 0, 0.1) 30px
-      ),
+    background-color: #1a1b2e;
+    background-image: 
       linear-gradient(0deg, 
-        rgba(0, 255, 0, 0.1) 50%, 
-        transparent 50%
+        rgba(80, 250, 123, 0.15) 50%, 
+        rgba(80, 250, 123, 0.05) 50%
+      ),
+      radial-gradient(
+        circle at 50% 50%,
+        rgba(139, 233, 253, 0.3) 1px,
+        transparent 1px
       ),
       repeating-linear-gradient(
-        0deg,
+        90deg,
         transparent,
-        transparent 5px,
-        rgba(0, 255, 0, 0.1) 5px,
-        rgba(0, 255, 0, 0.1) 10px
+        transparent 30px,
+        rgba(189, 147, 249, 0.1) 30px,
+        rgba(189, 147, 249, 0.1) 60px
       );
-    background-color: #000;
-    background-size: 30px 100%, 30px 20px, 30px 20px;
-    animation: digitalRain 2s linear infinite;
+    background-size: 60px 60px, 15px 15px, 60px 100%;
+    animation: digitalRain 3s linear infinite;
   }
 
   &.background-24 {
@@ -465,24 +464,24 @@ body {
       repeating-linear-gradient(
         45deg,
         transparent,
-        transparent 10px,
-        rgba(0, 0, 0, 0.1) 10px,
-        rgba(0, 0, 0, 0.1) 20px
+        transparent 5px,
+        rgba(0, 0, 0, 0.2) 5px,
+        rgba(0, 0, 0, 0.2) 10px
       ),
       linear-gradient(
         180deg,
-        #ff0080,
-        #ff0080 10px,
+        #800040 0%,
+        #800040 5px,
+        #000 5px,
         #000 10px,
+        #008000 10px,
+        #008000 15px,
+        #000 15px,
         #000 20px,
-        #00ff00 20px,
-        #00ff00 30px,
-        #000 30px,
-        #000 40px,
-        #0080ff 40px,
-        #0080ff 50px
+        #004080 20px,
+        #004080 25px
       );
-    background-size: 100% 100%, 100% 50px;
+    background-size: 100% 100%, 100% 25px;
   }
 
   @keyframes memphisMove {
@@ -492,7 +491,7 @@ body {
 
   @keyframes holoShift {
     0% { background-position: 0 0, 0 0; }
-    100% { background-position: 20px 0, 0 0; }
+    100% { background-position: 0 0, 400% 0; }
   }
 
   @keyframes staticNoise {
@@ -503,12 +502,12 @@ body {
   }
 
   @keyframes bubbleFloat {
-    0% { background-position: 0 0, 20px 20px; }
-    100% { background-position: 40px 40px, 60px 60px; }
+    0% { background-position: 0 0; }
+    100% { background-position: 40px 40px; }
   }
 
   @keyframes digitalRain {
     0% { background-position: 0 0, 0 0, 0 0; }
-    100% { background-position: 0 0, 0 20px, 0 20px; }
+    100% { background-position: 0 60px, 0 15px, 0 0; }
   }
 } 
