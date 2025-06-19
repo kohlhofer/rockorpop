@@ -69,10 +69,7 @@ const updateUrlParams = (cover: number, bodyColor: number, background: number, l
 
 // Tape presets for dropdown
 const tapePresets = [
-  {
-    label: 'POP Top50 - USA',
-    url: '?shell=6&bg=17&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
-  },
+  // Curated Collections
   {
     label: 'Campfire Classics',
     url: '?shell=10&bg=6&label=Campfire%20Classics&playlist=RDCLAK5uy_liwwwIG8z4P25AWeLZ2Nvydx1GwbvndEI',
@@ -96,6 +93,36 @@ const tapePresets = [
   {
     label: "An Afternoon's Electronica",
     url: '?cover=5&shell=7&bg=3&label=An%20Afternoon%27s%20Electronica&playlist=PLLXJQ4obAI9pgYJsE3TCInAqkMQKvCcMi&video=4yxQzAUMdfQ',
+  },
+  {
+    label: 'Somewhere in Northern Italy 1983',
+    url: '?cover=2&shell=2&bg=11&label=somewhere%20in%20northern%20italy%201983&playlist=RDRnXbsGo8eiY&video=RnXbsGo8eiY',
+  },
+
+  // 2025 Hotlists
+  {
+    label: 'Pop Hotlist 2025',
+    url: '?cover=1&shell=6&bg=15&label=Pop%20Hotlist%202025&playlist=PLYVjGTi85afqmbnA6nJxq03CZbeyYDhBd',
+  },
+  {
+    label: 'Hip-Hop Hotlist',
+    url: '?cover=3&shell=3&bg=12&label=Hip-Hop%20Hotlist&playlist=PLAKS_37ubZXB1LHq2Jm_612ysFjxYN9rA',
+  },
+  {
+    label: 'International Rock Hotlist',
+    url: '?cover=4&shell=7&bg=8&label=International%20Rock%20Hotlist&playlist=RDCLAK5uy_n-80IyhPQK7Dkdz1qBIkR-LqpH4cNgiYU',
+  },
+  {
+    label: 'Country Hotlist',
+    url: '?cover=2&shell=10&bg=6&label=Country%20Hotlist&playlist=RDCLAK5uy_lJ8xZWiZj2GCw7MArjakb6b0zfvqwldps',
+  },
+  {
+    label: 'Latin Hotlist 2025',
+    url: '?cover=5&shell=2&bg=17&label=Latin%20Hotlist%202025&playlist=PLAwhEEKBIS-43clk16b_nU0JMNn2_VMIO',
+  },
+  {
+    label: 'EDM Hotlist',
+    url: '?cover=1&shell=8&bg=13&label=EDM%20Hotlist&playlist=PL4Yq_wbU8pAoW4bejLKuMj2Q3a11MZnZv',
   },
 ];
 

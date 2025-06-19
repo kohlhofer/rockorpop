@@ -18,6 +18,33 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
   const dropdownRef = useRef<HTMLDivElement>(null);
   const selected = options.find(o => o.value === value);
 
+  // Split options into sections based on comments in the array
+  const getSections = () => {
+    const sections: { header: string; options: Option[] }[] = [];
+    let currentSection: { header: string; options: Option[] } = {
+      header: 'Curated Collections',
+      options: []
+    };
+
+    options.forEach((option, index) => {
+      if (index < 7) { // First 7 items are Curated Collections
+        currentSection.options.push(option);
+      } else { // Rest are 2025 Hotlists
+        if (currentSection.header !== '2025 Hotlists') {
+          sections.push(currentSection);
+          currentSection = {
+            header: '2025 Hotlists',
+            options: [option]
+          };
+        } else {
+          currentSection.options.push(option);
+        }
+      }
+    });
+    sections.push(currentSection);
+    return sections;
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!dropdownRef.current?.contains(event.target as Node) && 
@@ -52,23 +79,30 @@ const TapeDropdown: React.FC<TapeDropdownProps> = ({ options, value, onSelect, l
           role="listbox"
         >
           <div className="py-1">
-            <div className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-xs font-bold text-white/80 uppercase tracking-wider">
-              Example tapes
-            </div>
-            {options.map((option) => (
-              <button
-                key={option.value}
-                className={`block w-full text-left px-3 md:px-4 py-1.5 md:py-2 text-[13px] md:text-sm hover:bg-white/15 transition-colors duration-150
-                  ${option.value === value ? 'text-white font-bold' : 'text-white'}`}
-                onClick={() => {
-                  onSelect(option.value);
-                  setOpen(false);
-                }}
-                role="option"
-                aria-selected={option.value === value}
-              >
-                {option.label}
-              </button>
+            {getSections().map((section, sectionIndex) => (
+              <div key={section.header}>
+                <div className="px-3 md:px-4 py-1.5 md:py-2 text-[11px] md:text-xs font-bold text-white/80 uppercase tracking-wider">
+                  {section.header}
+                </div>
+                {section.options.map((option) => (
+                  <button
+                    key={option.value}
+                    className={`block w-full text-left px-3 md:px-4 py-1.5 md:py-2 text-[13px] md:text-sm hover:bg-white/15 transition-colors duration-150
+                      ${option.value === value ? 'text-white font-bold' : 'text-white'}`}
+                    onClick={() => {
+                      onSelect(option.value);
+                      setOpen(false);
+                    }}
+                    role="option"
+                    aria-selected={option.value === value}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+                {sectionIndex < getSections().length - 1 && (
+                  <div className="my-1 border-t border-white/10" />
+                )}
+              </div>
             ))}
           </div>
         </div>
