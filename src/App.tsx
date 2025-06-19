@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cassette from './components/Cassette';
 import TapeDropdown from './components/TapeDropdown';
 import './styles/App.scss';
@@ -168,6 +168,10 @@ function App() {
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const [playerResetKey, setPlayerResetKey] = useState(0);
   
+  // Detect if we're on mobile
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const updateInterval = isMobile ? 2000 : 1000; // 2s on mobile, 1s on desktop
+
   const totalCovers = 5;
   const totalBodyColors = 10;
   const totalBackgrounds = 24;
@@ -222,6 +226,42 @@ function App() {
     (window as any).onYouTubeIframeAPIReady = () => setYtReady(true);
   }, []);
 
+  // Debug: Track YouTube player events
+  useEffect(() => {
+    if (!player) return;
+    
+    const logPlayerEvent = (event: string) => {
+      console.log('YouTube Player Event:', {
+        event,
+        timestamp: new Date().toISOString(),
+        currentTrack: currentTrackIndex,
+        playState: ytPlayState
+      });
+    };
+
+    // Store reference to the original handler
+    const originalOnStateChange = player.getOption?.('events')?.onStateChange;
+    
+    // Add our event listener
+    const handleStateChange = (event: any) => {
+      logPlayerEvent(`State Change: ${event.data}`);
+      originalOnStateChange?.(event);
+    };
+    
+    player.addEventListener('onStateChange', handleStateChange);
+
+    return () => {
+      try {
+        // Only try to remove listener if player is still valid
+        if (player && !player.destroyed) {
+          player.removeEventListener('onStateChange', handleStateChange);
+        }
+      } catch (e) {
+        console.warn('Could not remove player event listener:', e);
+      }
+    };
+  }, [player, currentTrackIndex, ytPlayState]);
+
   // Create or update player when ready or playlist changes
   useEffect(() => {
     if (!ytReady || !playlistId) return;
@@ -232,14 +272,24 @@ function App() {
       
       // Clear any existing player
       if (player) {
-        player.destroy();
+        try {
+          // Remove all event listeners before destroying
+          if (!player.destroyed) {
+            player.removeEventListener('onStateChange');
+            player.removeEventListener('onReady');
+            player.removeEventListener('onError');
+          }
+          player.destroy();
+        } catch (e) {
+          console.warn('Error cleaning up player:', e);
+        }
       }
-      
+
       // Reset all states when switching playlists
       setCurrentProgress(0);
       setCurrentVideoTitle('');
       setCurrentTrackIndex(0);
-      setYtPlayState('STOP');  // Ensure play controls show stopped state
+      setYtPlayState('STOP');
       
       // Initialize new player
       const playerConfig = {
@@ -291,8 +341,8 @@ function App() {
             console.error('YouTube player error:', event.data);
           }
         }
-      };
-      
+    };
+
       // Create new player instance
       new (window as any).YT.Player(playerTarget, playerConfig);
     };
@@ -300,40 +350,52 @@ function App() {
     initializePlayer();
   }, [ytReady, playlistId, playerResetKey]);
 
+  // Memoize progress calculation
+  const calculateProgress = useCallback(() => {
+    if (!player?.getCurrentTime || !player?.getDuration || !playlistLength) return null;
+    
+    try {
+      const current = player.getCurrentTime();
+      const total = player.getDuration();
+      
+      if (typeof current === 'number' && typeof total === 'number' && total > 0) {
+        // Calculate per-track percentage
+        const percentPerTrack = 100 / playlistLength;
+        
+        // Calculate completed tracks progress
+        const completedTracksProgress = currentTrackIndex * percentPerTrack;
+        
+        // Calculate current track progress
+        const currentTrackProgress = (current / total) * percentPerTrack;
+        
+        // Return total progress
+        return completedTracksProgress + currentTrackProgress;
+      }
+    } catch (e) {
+      console.error('Error calculating progress:', e);
+    }
+    return null;
+  }, [player, currentTrackIndex, playlistLength]);
+
   // Track progress
   useEffect(() => {
     if (!player) return;
     
     const updateProgress = () => {
-      try {
-        if (player.getCurrentTime && player.getDuration && playlistLength > 0) {
-          const current = player.getCurrentTime();
-          const total = player.getDuration();
-          if (typeof current === 'number' && typeof total === 'number' && total > 0) {
-            // Calculate per-track percentage (each track is worth 100/playlistLength percent)
-            const percentPerTrack = 100 / playlistLength;
-            
-            // Calculate completed tracks progress
-            const completedTracksProgress = currentTrackIndex * percentPerTrack;
-            
-            // Calculate current track progress
-            const currentTrackProgress = (current / total) * percentPerTrack;
-            
-            // Total progress is completed tracks plus current track progress
-            const totalProgress = completedTracksProgress + currentTrackProgress;
-            setCurrentProgress(totalProgress);
-          }
-        }
-      } catch (e) {
-        console.error('Error updating progress:', e);
+      const progress = calculateProgress();
+      if (progress !== null) {
+        setCurrentProgress(progress);
       }
     };
     
-    // Update progress immediately and then every 500ms
+    // Update progress immediately and then at interval
     updateProgress();
-    const intervalId = setInterval(updateProgress, 500);
-    return () => clearInterval(intervalId);
-  }, [player, ytPlayState, currentTrackIndex, playlistLength]);
+    const progressInterval = setInterval(updateProgress, updateInterval);
+    
+    return () => {
+      clearInterval(progressInterval);
+    };
+  }, [player, calculateProgress, updateInterval]);
 
   // Handle play state changes
   useEffect(() => {
@@ -353,28 +415,28 @@ function App() {
   const handlePlay = () => {
     setYtPlayState('FW');
   };
-
+  
   const handlePause = () => {
     setYtPlayState('STOP');
   };
-
+  
   const handlePrev = () => {
     if (!player) return;
     try {
-      player.previousVideo();
-      const videoData = player.getVideoData();
-      setCurrentVideoTitle(videoData?.title || '');
+        player.previousVideo();
+        const videoData = player.getVideoData();
+        setCurrentVideoTitle(videoData?.title || '');
     } catch (e) {
       console.error('Error playing previous video:', e);
     }
   };
-
+  
   const handleNext = () => {
     if (!player) return;
     try {
-      player.nextVideo();
-      const videoData = player.getVideoData();
-      setCurrentVideoTitle(videoData?.title || '');
+        player.nextVideo();
+        const videoData = player.getVideoData();
+        setCurrentVideoTitle(videoData?.title || '');
     } catch (e) {
       console.error('Error playing next video:', e);
     }
