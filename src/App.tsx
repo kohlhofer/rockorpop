@@ -235,6 +235,12 @@ function App() {
         player.destroy();
       }
       
+      // Reset all states when switching playlists
+      setCurrentProgress(0);
+      setCurrentVideoTitle('');
+      setCurrentTrackIndex(0);
+      setYtPlayState('STOP');  // Ensure play controls show stopped state
+      
       // Initialize new player
       const playerConfig = {
         height: '100%',
