@@ -529,6 +529,12 @@ function App() {
     };
   }, [player]);
 
+  // Update document title when label or track changes
+  useEffect(() => {
+    const trackInfo = currentVideoTitle ? ` - ${currentVideoTitle}` : '';
+    document.title = `${currentLabel}${trackInfo} | rockorpop.com`;
+  }, [currentLabel, currentVideoTitle]);
+
   return (
     <div className={`app background-${currentBackground}`}>
       {/* Top Navigation Bar */}
