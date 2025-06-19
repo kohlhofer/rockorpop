@@ -520,9 +520,9 @@ function App() {
         <div className="flex items-center">
           <button 
             onClick={() => setConfigPanelOpen(!configPanelOpen)}
-            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[13px] md:text-sm font-bold text-[#2A1810] bg-[#FFB300]/80 hover:bg-[#FFB300]/90 backdrop-blur-md shadow-lg hover:shadow-xl transition-all duration-200"
+            className="inline-flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-lg text-[13px] md:text-sm font-bold text-[#1a1a1a] bg-[#FFD700]/90 hover:bg-[#FFD700] backdrop-blur-md shadow-lg hover:shadow-xl transition-all duration-200"
           >
-            <svg width="14" height="14" className="md:w-4 md:h-4 text-[#E53935]" viewBox="0 0 24 24" fill="currentColor">
+            <svg width="14" height="14" className="md:w-4 md:h-4 text-[#FF4081]" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
             </svg>
             Make a tape...
@@ -647,20 +647,18 @@ function App() {
 
       {/* Side Panel */}
       <div 
-        className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[400px] lg:w-[450px] h-full 
-        bg-gradient-to-br from-[rgba(245,242,232,0.65)] to-[rgba(232,220,192,0.50)] 
-        backdrop-blur-2xl backdrop-saturate-[1.2] border-l-2 border-[rgba(139,125,107,0.3)] 
-        shadow-[-4px_0_20px_rgba(0,0,0,0.15)] transition-all duration-300 ease-in-out 
+        className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[350px] lg:w-[400px] h-full 
+        bg-gradient-to-br from-[rgba(250,250,250,0.55)] to-[rgba(240,240,240,0.45)] 
+        backdrop-blur-lg backdrop-saturate-[1.1] border-l border-[rgba(0,0,0,0.06)] 
+        shadow-[-4px_0_20px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out 
         z-[2002] overflow-y-auto`}
       >
-        <div className="sticky top-0 left-0 right-0 h-14 md:h-16 flex items-center justify-between px-8 bg-gradient-to-b from-[rgba(245,242,232,0.9)] to-transparent border-b border-[rgba(139,125,107,0.2)]">
-          <h2 className="text-[#4a3f36] text-lg font-bold">Design Your Tape</h2>
+        <div className="sticky top-0 left-0 right-0 h-12 md:h-14 flex items-center justify-between px-6 bg-gradient-to-b from-[rgba(250,250,250,0.65)] to-transparent border-b border-[rgba(0,0,0,0.04)]">
+          <h2 className="text-[#1a1a1a] text-base font-bold">Design Your Tape</h2>
           <button 
-            className="w-8 h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center
-            text-[#6b5b4f] text-xl font-bold transition-all duration-200 hover:bg-white/90 
-            hover:border-2 hover:border-[rgba(139,125,107,0.4)] hover:-translate-y-0.5 
-            hover:shadow-md active:translate-y-0.5 active:bg-white active:border-[rgba(139,125,107,0.6)] 
-            active:shadow-sm"
+            className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
+            text-[#1a1a1a] text-lg font-medium transition-all duration-200 hover:bg-black/5
+            hover:shadow-sm active:bg-black/10 active:shadow-none"
             onClick={() => setConfigPanelOpen(false)}
             title="Close Settings"
           >
@@ -668,12 +666,12 @@ function App() {
           </button>
         </div>
 
-        <div className="p-6 pt-4 md:p-8 md:pt-6">
+        <div className="p-4 md:p-6">
           {/* Cassette Label Section */}
-          <div className="mb-8">
+          <div className="mb-6">
             <label 
               htmlFor="cassette-label" 
-              className="block mb-2 text-[#4a3f36] text-base font-semibold"
+              className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
             >
               Name Your Tape
             </label>
@@ -683,60 +681,57 @@ function App() {
               value={currentLabel}
               onChange={handleLabelChange}
               placeholder="Enter a catchy title..."
-              className="w-full px-4 py-3 text-[15px] border-2 border-[rgba(139,125,107,0.3)] 
-              rounded-lg bg-white/90 text-[#4a3f36] transition-all duration-200
-              shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,0.5)]
-              focus:outline-none focus:border-[#6b5b4f] focus:bg-white/95 
-              focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1),0_0_0_3px_rgba(107,91,79,0.1)]
-              placeholder:text-[#4a3f36]/50"
+              className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
+              rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
+              shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
+              focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
+              placeholder:text-[#1a1a1a]/40"
             />
           </div>
 
           {/* YouTube Playlist Section */}
-          <div className="mb-8">
+          <div className="mb-6">
             <label 
               htmlFor="playlist-url"
-              className="block mb-2 text-[#4a3f36] text-base font-semibold"
+              className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
             >
               Add Your Music
             </label>
-            <p className="mb-3 text-sm text-[#6b5b4f]/80">Paste a YouTube playlist URL to load your favorite tracks. The playlist will be converted into a retro cassette experience.</p>
+            <p className="mb-2 text-xs text-[#1a1a1a]/60">Paste a YouTube playlist URL to load your favorite tracks.</p>
             <input
               id="playlist-url"
               type="url"
               value={playlistUrl}
               onChange={handlePlaylistUrlChange}
               placeholder="Paste YouTube playlist URL..."
-              className="w-full px-4 py-3 text-[15px] border-2 border-[rgba(139,125,107,0.3)] 
-              rounded-lg bg-white/90 text-[#4a3f36] transition-all duration-200
-              shadow-[inset_0_2px_4px_rgba(0,0,0,0.05),0_1px_0_rgba(255,255,255,0.5)]
-              focus:outline-none focus:border-[#6b5b4f] focus:bg-white/95 
-              focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.1),0_0_0_3px_rgba(107,91,79,0.1)]
-              placeholder:text-[#4a3f36]/50"
+              className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
+              rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
+              shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
+              focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
+              placeholder:text-[#1a1a1a]/40"
             />
           </div>
 
           {/* Style Options */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Cover Art Section */}
             <div>
-              <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
                 Choose Cover Design
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
                   <button
                     key={coverNum}
                     onClick={() => goToCover(coverNum)}
-                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
+                    className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
                     ${currentCover === coverNum 
-                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
-                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
+                      ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
+                      : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
                     }
-                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
-                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
+                    text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
                   >
-                    {coverNum}
+                    {String.fromCharCode(64 + coverNum)}
                   </button>
                 ))}
               </div>
@@ -744,47 +739,60 @@ function App() {
 
             {/* Shell Color Section */}
             <div>
-              <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
                 Pick Shell Color
               </label>
-              <div className="flex flex-wrap gap-2">
-                {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => (
-                  <button
-                    key={colorNum}
-                    onClick={() => goToBodyColor(colorNum)}
-                    title={bodyColorNames[colorNum - 1]}
-                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
-                    ${currentBodyColor === colorNum 
-                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
-                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
-                    }
-                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
-                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
-                  >
-                    {colorNum}
-                  </button>
-                ))}
+              <div className="flex flex-wrap gap-1.5">
+                {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => {
+                  const colors: Record<number, { bg: string; border: string }> = {
+                    1: { bg: '#0E9DCC', border: '#0080AA' }, // Blue
+                    2: { bg: '#FF6C24', border: '#DF4900' }, // Orange
+                    3: { bg: '#686868', border: '#4B4B4B' }, // Dark Grey
+                    4: { bg: '#A7A7A7', border: '#838383' }, // Light Grey
+                    5: { bg: '#4CAF50', border: '#388E3C' }, // Grass Green
+                    6: { bg: '#FFD54F', border: '#FFB300' }, // Cheerful Yellow
+                    7: { bg: '#F44336', border: '#D32F2F' }, // Red
+                    8: { bg: '#7B1FA2', border: '#4A148C' }, // Purple
+                    9: { bg: '#F48FB1', border: '#F06292' }, // Pink
+                    10: { bg: '#F5F0E8', border: '#D0C5B8' }, // Cream
+                  };
+                  return (
+                    <button
+                      key={colorNum}
+                      onClick={() => goToBodyColor(colorNum)}
+                      title={bodyColorNames[colorNum - 1]}
+                      className={`w-7 h-7 md:w-8 md:h-8 rounded-full border-2 transition-all duration-200
+                      ${currentBodyColor === colorNum 
+                        ? 'scale-110 shadow-md' 
+                        : 'hover:scale-105 hover:shadow-sm'
+                      }`}
+                      style={{
+                        backgroundColor: colors[colorNum].bg,
+                        borderColor: colors[colorNum].border,
+                      }}
+                    />
+                  );
+                })}
               </div>
             </div>
 
             {/* Background Section */}
             <div>
-            <label className="block mb-3 text-sm text-[#6b5b4f]/80">
+              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
                 Set Background Style
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5">
                 {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
                   <button
                     key={bgNum}
                     onClick={() => goToBackground(bgNum)}
                     title={backgroundNames[bgNum - 1]}
-                    className={`w-8 h-8 md:w-9 md:h-9 rounded-full border-2 
+                    className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
                     ${currentBackground === bgNum 
-                      ? 'bg-gradient-to-br from-[#6b5b4f] to-[#4a3f36] text-[#f5f2e8] border-[#4a3f36] scale-110 shadow-md' 
-                      : 'bg-gradient-to-br from-[#f5f2e8] to-[#e8dcc0] text-[#6b5b4f] border-[rgba(139,125,107,0.3)] hover:scale-105'
+                      ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
+                      : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
                     }
-                    text-xs md:text-sm font-bold transition-all duration-200 flex items-center justify-center
-                    shadow-[0_2px_4px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.3)]`}
+                    text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
                   >
                     {bgNum}
                   </button>
@@ -794,16 +802,14 @@ function App() {
           </div>
 
           {/* Randomize Button */}
-          <div className="mt-8 pt-6 border-t border-[rgba(139,125,107,0.2)]">
+          <div className="mt-6 pt-4 border-t border-[rgba(0,0,0,0.04)]">
             <button
               onClick={randomizeAll}
-              className="w-full px-6 py-3.5 text-sm font-semibold text-white 
-              bg-gradient-to-br from-[#4CAF50] to-[#45a049] rounded-lg
-              shadow-[0_3px_6px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.2)]
-              transition-all duration-200 hover:from-[#45a049] hover:to-[#3d8b40]
-              hover:-translate-y-0.5 hover:shadow-[0_4px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.25)]
-              active:translate-y-0.5 active:shadow-[0_2px_4px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.1)]
-              text-shadow-[1px_1px_2px_rgba(0,0,0,0.2)]"
+              className="w-full px-4 py-2.5 text-sm font-medium text-white 
+              bg-[#1a1a1a]/90 rounded-lg
+              shadow-sm transition-all duration-200 
+              hover:bg-black/90 hover:shadow
+              active:bg-black/85 active:shadow-none"
             >
               Surprise Me with Random Design
             </button>
