@@ -9,5 +9,6 @@ export default defineConfig({
   },
   css: {
     postcss: './postcss.config.cjs'
-  }
+  },
+  base: '/',  // This ensures assets are loaded correctly on GitHub Pages
 }) 
