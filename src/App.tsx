@@ -300,17 +300,28 @@ function App() {
     initializePlayer();
   }, [ytReady, playlistId, playerResetKey]);
 
-  // Calculate and update progress
+  // Track progress
   useEffect(() => {
     if (!player) return;
     
     const updateProgress = () => {
       try {
-        if (player.getCurrentTime && player.getDuration) {
+        if (player.getCurrentTime && player.getDuration && playlistLength > 0) {
           const current = player.getCurrentTime();
           const total = player.getDuration();
-          if (current && total) {
-            setCurrentProgress((current / total) * 100);
+          if (typeof current === 'number' && typeof total === 'number' && total > 0) {
+            // Calculate per-track percentage (each track is worth 100/playlistLength percent)
+            const percentPerTrack = 100 / playlistLength;
+            
+            // Calculate completed tracks progress
+            const completedTracksProgress = currentTrackIndex * percentPerTrack;
+            
+            // Calculate current track progress
+            const currentTrackProgress = (current / total) * percentPerTrack;
+            
+            // Total progress is completed tracks plus current track progress
+            const totalProgress = completedTracksProgress + currentTrackProgress;
+            setCurrentProgress(totalProgress);
           }
         }
       } catch (e) {
@@ -318,9 +329,11 @@ function App() {
       }
     };
     
-    const intervalId = setInterval(updateProgress, 1000);
+    // Update progress immediately and then every 500ms
+    updateProgress();
+    const intervalId = setInterval(updateProgress, 500);
     return () => clearInterval(intervalId);
-  }, [player]);
+  }, [player, ytPlayState, currentTrackIndex, playlistLength]);
 
   // Handle play state changes
   useEffect(() => {
