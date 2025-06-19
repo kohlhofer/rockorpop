@@ -139,9 +139,7 @@ function App() {
   const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
   const [currentProgress, setCurrentProgress] = useState(0);
   const [playlistLength, setPlaylistLength] = useState<number>(0);
-  const [isTracking, setIsTracking] = useState(false);
   const progressIntervalId = useRef<number | null>(null);
-  const lastValidProgress = useRef<number>(0);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
   const [currentVideoId, setCurrentVideoId] = useState<string>('');
@@ -265,24 +263,20 @@ function App() {
             switch (event.data) {
               case PlayerState.PLAYING:
                 setYtPlayState('FW');
-                // Start tracking once we're actually playing
-                startProgressTracking();
                 break;
               
               case PlayerState.PAUSED:
                 setYtPlayState('STOP');
-                // Update progress one last time before stopping
+                // Update progress one last time
                 const progress = calculatePlaylistProgress();
                 if (!isNaN(progress)) {
                   setCurrentProgress(progress);
                 }
-                stopProgressTracking();
                 break;
               
               case PlayerState.ENDED:
               case PlayerState.UNSTARTED:
                 setYtPlayState('STOP');
-                stopProgressTracking();
                 break;
               
               case PlayerState.BUFFERING:
@@ -316,37 +310,23 @@ function App() {
 
   // Calculate progress based on current position in playlist
   const calculatePlaylistProgress = () => {
-    if (!player || !playlistLength) return lastValidProgress.current;
+    if (!player || !playlistLength) return 0;
     
     try {
       const currentIndex = player.getPlaylistIndex();
       const currentTime = player.getCurrentTime();
       const currentDuration = player.getDuration();
       
-      // Validate inputs
-      if (currentIndex < 0 || currentIndex >= playlistLength) {
-        return lastValidProgress.current;
-      }
-
-      // Calculate progress from completed videos first
-      const percentPerVideo = 100 / playlistLength;
-      const completedVideosProgress = currentIndex * percentPerVideo;
+      // Basic progress calculation:
+      // 1. Each track contributes (100/playlistLength)% to total progress
+      // 2. Current track progress is (currentTime/currentDuration) of its share
+      const progressPerTrack = 100 / playlistLength;
+      const completedProgress = currentIndex * progressPerTrack;
+      const currentTrackProgress = currentDuration ? (currentTime / currentDuration) * progressPerTrack : 0;
       
-      // If we don't have valid current video data, just return completed videos progress
-      if (!currentDuration || !currentTime) {
-        return completedVideosProgress;
-      }
-      
-      // Add current video progress
-      const currentVideoProgress = (currentTime / currentDuration) * percentPerVideo;
-      const totalProgress = Math.min(100, completedVideosProgress + currentVideoProgress);
-      
-      // Store this as our last valid progress
-      lastValidProgress.current = totalProgress;
-      return totalProgress;
+      return Math.min(100, completedProgress + currentTrackProgress);
     } catch (error) {
-      console.error('Error calculating progress:', error);
-      return lastValidProgress.current;
+      return 0;
     }
   };
 
@@ -358,6 +338,12 @@ function App() {
       setCurrentVideoId(videoData.video_id || '');
       setCurrentTrackIndex(currentPlayer.getPlaylistIndex());
       
+      // Update playlist length
+      const playlist = currentPlayer.getPlaylist();
+      if (playlist) {
+        setPlaylistLength(playlist.length);
+      }
+      
       // Force a progress update when track changes
       const progress = calculatePlaylistProgress();
       if (!isNaN(progress)) {
@@ -366,60 +352,16 @@ function App() {
     }
   };
 
-  // Start tracking progress
-  const startProgressTracking = () => {
-    if (!isTracking) {
-      setIsTracking(true);
-      
-      // Clear any existing interval
-      if (progressIntervalId.current) {
-        clearInterval(progressIntervalId.current);
-      }
-      
-      // Start an interval to poll the current time
-      progressIntervalId.current = window.setInterval(() => {
-        if (player) {
-          const progress = calculatePlaylistProgress();
-          if (!isNaN(progress)) {
-            setCurrentProgress(progress);
-          }
-        }
-      }, 500);
-    }
-  };
-
-  // Stop tracking progress
-  const stopProgressTracking = () => {
-    setIsTracking(false);
-    
-    // Clear the polling interval
-    if (progressIntervalId.current) {
-      clearInterval(progressIntervalId.current);
-      progressIntervalId.current = null;
-    }
-  };
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      if (progressIntervalId.current) {
-        clearInterval(progressIntervalId.current);
-      }
-    };
-  }, []);
-
   // Playback controls
   const handlePlay = () => {
     if (player) {
       player.playVideo();
-      startProgressTracking();
     }
   };
   
   const handlePause = () => {
     if (player) {
       player.pauseVideo();
-      stopProgressTracking();
     }
   };
   
@@ -568,68 +510,22 @@ function App() {
   // Add useEffect to increment playerResetKey when playlistUrl changes
   useEffect(() => {
     setPlayerResetKey((k: number) => k + 1);
+    // Reset progress when playlist changes
+    setCurrentProgress(0);
   }, [playlistUrl]);
 
-  // Update YouTube player event handlers
+  // Start progress tracking interval when player is ready
   useEffect(() => {
     if (!player) return;
-
-    const handlePlayerStateChange = (event: any) => {
-      const PlayerState = (window as any).YT.PlayerState;
-      const currentPlayer = event.target;
-      
-      // Update video info on any state change
-      const videoData = currentPlayer.getVideoData();
-      if (videoData) {
-        setCurrentVideoTitle(videoData.title || '');
-        setCurrentVideoId(videoData.video_id || '');
-        setCurrentTrackIndex(currentPlayer.getPlaylistIndex());
-      }
-      
-      // Handle state-specific actions
-      switch (event.data) {
-        case PlayerState.PLAYING:
-          setYtPlayState('FW');
-          // Start tracking once we're actually playing
-          startProgressTracking();
-          break;
-        
-        case PlayerState.PAUSED:
-          setYtPlayState('STOP');
-          // Update progress one last time before stopping
-          const progress = calculatePlaylistProgress();
-          if (!isNaN(progress)) {
-            setCurrentProgress(progress);
-          }
-          stopProgressTracking();
-          break;
-        
-        case PlayerState.ENDED:
-        case PlayerState.UNSTARTED:
-          setYtPlayState('STOP');
-          stopProgressTracking();
-          break;
-        
-        case PlayerState.BUFFERING:
-          // Don't change anything during buffering
-          break;
-      }
-    };
-
-    try {
-      // Add event listener for track changes
-      player.addEventListener('onStateChange', handlePlayerStateChange);
-    } catch (error) {
-      console.error('Error setting up player event listeners:', error);
-    }
-
+    
+    // Update progress every second
+    const intervalId = window.setInterval(() => {
+      const progress = calculatePlaylistProgress();
+      setCurrentProgress(progress);
+    }, 1000);
+    
     return () => {
-      try {
-        // Remove event listener on cleanup
-        player.removeEventListener('onStateChange', handlePlayerStateChange);
-      } catch (error) {
-        console.error('Error cleaning up player event listeners:', error);
-      }
+      clearInterval(intervalId);
     };
   }, [player]);
 
