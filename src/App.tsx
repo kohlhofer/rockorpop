@@ -71,7 +71,7 @@ const updateUrlParams = (cover: number, bodyColor: number, background: number, l
 const tapePresets = [
   {
     label: 'POP Top50 - USA',
-    url: '?cover=5&shell=2&bg=15&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
+    url: '?shell=6&bg=17&label=POP%20Top%2050%20-%20USA&playlist=PL4fGSI1pDJn77aK7sAW2AT0oOzo5inWY8',
   },
   {
     label: 'Campfire Classics',
@@ -88,6 +88,10 @@ const tapePresets = [
   {
     label: '80s German Synth',
     url: '?cover=2&shell=9&bg=8&label=80s%20German%20Synth&playlist=PL9NOKG-8bUwqcG2Dd8GUKzwSG3di9mQ1m',
+  },
+  {
+    label: '80s All The Way',
+    url: '?cover=3&shell=9&bg=18&label=80s%20all%20the%20way&playlist=RDCLAK5uy_nKfNEHo6Yu1lao4pamzirHgatT0liBhzY',
   },
 ];
 
