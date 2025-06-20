@@ -848,35 +848,43 @@ function App() {
       {shareDialogOpen && (
         <>
           <div 
-            className="fixed inset-0 bg-black/50 z-[2001]" 
+            className="fixed inset-0 bg-black/20 z-[2001]" 
             onClick={() => setShareDialogOpen(false)} 
           />
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl z-[2002] overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">Share your tape</h3>
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg 
+            bg-gradient-to-br from-[rgba(250,250,250,0.55)] to-[rgba(240,240,240,0.45)]
+            backdrop-blur-lg backdrop-saturate-[1.1] border border-[rgba(0,0,0,0.06)]
+            shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-2xl z-[2002] overflow-hidden">
+            <div className="sticky top-0 left-0 right-0 h-12 md:h-14 flex items-center justify-between px-6 
+              bg-gradient-to-b from-[rgba(250,250,250,0.65)] to-transparent border-b border-[rgba(0,0,0,0.04)]">
+              <h2 className="text-[#1a1a1a] text-base font-bold">Share Your Tape</h2>
               <button 
                 onClick={() => setShareDialogOpen(false)}
-                className="text-gray-500 hover:text-gray-700 transition-colors"
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
+                text-[#1a1a1a] text-lg font-medium transition-all duration-200 hover:bg-black/5
+                hover:shadow-sm active:bg-black/10 active:shadow-none"
                 title="Close"
               >
                 ✕
               </button>
             </div>
-            <div className="p-6">
-              <p className="text-gray-600 mb-4">Save this URL to get back to your current tape or share it with others.</p>
-              <div className="flex gap-3">
+            <div className="p-4 md:p-6">
+              <p className="mb-4 text-sm text-[#1a1a1a]/60">Save this URL to get back to your current tape or share it with others.</p>
+              <div className="flex gap-2">
                 <input
                   type="text"
                   value={window.location.href}
                   readOnly
-                  className="flex-1 px-4 py-2 text-sm border border-gray-300 rounded-lg bg-gray-50"
+                  className="flex-1 px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
+                  rounded-lg bg-white/75 text-[#1a1a1a]
+                  shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]"
                 />
                 <button 
-                  className={`px-4 py-2 text-sm font-medium text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                    copySuccess 
-                      ? 'bg-green-600 hover:bg-green-700' 
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  }`}
+                  className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-all duration-200
+                    ${copySuccess 
+                      ? 'bg-[#4CAF50]/90 hover:bg-[#4CAF50]' 
+                      : 'bg-[#0E9DCC]/90 hover:bg-[#0E9DCC]'
+                    } backdrop-blur-md shadow-lg hover:shadow-xl`}
                   onClick={handleCopyUrl}
                   title="Copy to clipboard"
                 >
