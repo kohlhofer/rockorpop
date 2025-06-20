@@ -14,6 +14,7 @@ A beautiful web app for creating and sharing virtual mixtapes with a retro casse
 - **Playback Controls**: Play, pause, previous, and next track controls
 - **Progress Tracking**: Visual tape spool movement reflecting playlist progress
 - **Share Your Tapes**: Generate shareable links to your customized mixtapes
+- **Social Media Preview**: Rich social media previews when sharing your mixtapes, showing your exact cassette design
 
 ## 🚀 Getting Started
 
@@ -45,6 +46,22 @@ npm run dev
 npm run build
 ```
 
+### Generating Social Preview Images
+
+The app includes a script to generate Open Graph preview images for all possible cassette combinations:
+
+```bash
+npm run generate-previews
+```
+
+This will create preview images in the `public/og-image` directory for:
+- All cassette cover designs (5)
+- All shell colors (10)
+- All background styles (24)
+- All possible combinations
+
+Note: The preview generation script requires Node.js and uses browser APIs, so it needs to be run in a browser-like environment.
+
 ## 🛠️ Built With
 
 - React 18
@@ -53,6 +70,7 @@ npm run build
 - TailwindCSS
 - SASS
 - YouTube IFrame Player API
+- React Helmet Async (for social media meta tags)
 
 ## 🎨 Design
 
@@ -63,6 +81,7 @@ The app features a skeuomorphic design that brings the nostalgic feel of cassett
 - Custom cover art options
 - Interactive playback controls
 - Customizable tape labels
+- Social media preview images showing exact cassette designs
 
 ## 📝 License
 
@@ -71,3 +90,10 @@ ISC License
 ## 🌐 Live Demo
 
 Visit [rockorpop.com](https://rockorpop.com) to try it out! 
+
+## 🔄 Recent Updates
+
+- **Enhanced Social Sharing**: Added rich social media previews with Open Graph meta tags
+- **Improved YouTube Integration**: Fixed player cleanup and initialization for smoother playlist switching
+- **Better State Management**: Improved handling of player state during navigation and customization
+- **Performance Optimizations**: Optimized DOM management for YouTube player integration 

@@ -191,7 +191,7 @@ function App() {
   const [ytReady, setYtReady] = useState(false);
   const [ytPlayState, setYtPlayState] = useState<'STOP' | 'FW'>('STOP');
   const playerRef = useRef<HTMLDivElement>(null);
-  const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
+  const { playlistId } = extractYouTubeIds(playlistUrl);
   const [currentProgress, setCurrentProgress] = useState<number>(0);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
@@ -201,7 +201,7 @@ function App() {
   // Detect if we're on mobile
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const updateInterval = isMobile ? 2000 : 1000; // 2s on mobile, 1s on desktop
-
+  
   const totalCovers = 5;
   const totalBodyColors = 10;
   const totalBackgrounds = 24;
@@ -240,8 +240,8 @@ function App() {
 
   // Sync state changes to URL parameters
   useEffect(() => {
-    const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
-    updateUrlParams(currentCover, currentBodyColor, currentBackground, currentLabel, playlistId, videoId);
+    const { playlistId } = extractYouTubeIds(playlistUrl);
+    updateUrlParams(currentCover, currentBodyColor, currentBackground, currentLabel, playlistId, '');
   }, [currentCover, currentBodyColor, currentBackground, currentLabel, playlistUrl]);
 
   // Load YouTube IFrame API
@@ -315,7 +315,7 @@ function App() {
 
   useEffect(() => {
     if (!ytReady || !playlistId) return;
-
+    
     const initializePlayer = () => {
       const container = document.getElementById('yt-player-container');
       if (!container) return;
@@ -464,8 +464,8 @@ function App() {
       if (ytPlayState === 'STOP') {
         player.pauseVideo();
       } else if (ytPlayState === 'FW') {
-        player.playVideo();
-      }
+      player.playVideo();
+    }
     } catch (e) {
       console.error('Error controlling playback:', e);
     }
@@ -816,106 +816,106 @@ function App() {
       {/* Config Panel */}
       {configPanelOpen && (
         <>
-          <div 
-            className="fixed inset-0 bg-black/20 z-[2000]" 
-            onClick={() => setConfigPanelOpen(false)} 
-          />
+        <div 
+          className="fixed inset-0 bg-black/20 z-[2000]" 
+          onClick={() => setConfigPanelOpen(false)} 
+        />
           <div 
             className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[350px] lg:w-[400px] h-full 
             bg-gradient-to-br from-[rgba(250,250,250,0.55)] to-[rgba(240,240,240,0.45)] 
             backdrop-blur-lg backdrop-saturate-[1.1] border-l border-[rgba(0,0,0,0.06)] 
             shadow-[-4px_0_20px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out 
-            z-[2002] overflow-y-auto`}
-          >
+        z-[2002] overflow-y-auto`}
+      >
             <div className="sticky top-0 left-0 right-0 h-12 md:h-14 flex items-center justify-between px-6 bg-gradient-to-b from-[rgba(250,250,250,0.65)] to-transparent border-b border-[rgba(0,0,0,0.04)]">
               <h2 className="text-[#1a1a1a] text-base font-bold">Design Your Tape</h2>
-              <button 
+          <button 
                 className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
                 text-[#1a1a1a] text-lg font-medium transition-all duration-200 hover:bg-black/5
                 hover:shadow-sm active:bg-black/10 active:shadow-none"
-                onClick={() => setConfigPanelOpen(false)}
-                title="Close Settings"
-              >
-                ✕
-              </button>
-            </div>
+            onClick={() => setConfigPanelOpen(false)}
+            title="Close Settings"
+          >
+            ✕
+          </button>
+        </div>
 
             <div className="p-4 md:p-6">
-              {/* Cassette Label Section */}
+          {/* Cassette Label Section */}
               <div className="mb-6">
-                <label 
-                  htmlFor="cassette-label" 
+            <label 
+              htmlFor="cassette-label" 
                   className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
-                >
-                  Name Your Tape
-                </label>
-                <input
-                  id="cassette-label"
-                  type="text"
-                  value={currentLabel}
-                  onChange={handleLabelChange}
-                  placeholder="Enter a catchy title..."
+            >
+              Name Your Tape
+            </label>
+            <input
+              id="cassette-label"
+              type="text"
+              value={currentLabel}
+              onChange={handleLabelChange}
+              placeholder="Enter a catchy title..."
                   className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
                   rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
                   shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
                   focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
                   placeholder:text-[#1a1a1a]/40"
-                />
-              </div>
+            />
+          </div>
 
-              {/* YouTube Playlist Section */}
+          {/* YouTube Playlist Section */}
               <div className="mb-6">
-                <label 
-                  htmlFor="playlist-url"
+            <label 
+              htmlFor="playlist-url"
                   className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
-                >
-                  Add Your Music
-                </label>
+            >
+              Add Your Music
+            </label>
                 <p className="mb-2 text-xs text-[#1a1a1a]/60">Paste a YouTube playlist URL to load your favorite tracks.</p>
-                <input
-                  id="playlist-url"
-                  type="url"
-                  value={playlistUrl}
-                  onChange={handlePlaylistUrlChange}
-                  placeholder="Paste YouTube playlist URL..."
+            <input
+              id="playlist-url"
+              type="url"
+              value={playlistUrl}
+              onChange={handlePlaylistUrlChange}
+              placeholder="Paste YouTube playlist URL..."
                   className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
                   rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
                   shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
                   focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
                   placeholder:text-[#1a1a1a]/40"
-                />
-              </div>
+            />
+          </div>
 
-              {/* Style Options */}
+          {/* Style Options */}
               <div className="space-y-6">
-                {/* Cover Art Section */}
-                <div>
+            {/* Cover Art Section */}
+            <div>
                   <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                    Choose Cover Design
-                  </label>
+                Choose Cover Design
+              </label>
                   <div className="flex flex-wrap gap-1.5">
                     {Array.from({ length: 5 }, (_, i) => i + 1).map(coverNum => (
-                      <button
-                        key={coverNum}
-                        onClick={() => goToCover(coverNum)}
+                  <button
+                    key={coverNum}
+                    onClick={() => goToCover(coverNum)}
                         className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
-                        ${currentCover === coverNum 
+                    ${currentCover === coverNum 
                           ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
                           : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
-                        }
+                    }
                         text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
-                      >
+                  >
                         {String.fromCharCode(64 + coverNum)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                  </button>
+                ))}
+              </div>
+            </div>
 
-                {/* Shell Color Section */}
-                <div>
+            {/* Shell Color Section */}
+            <div>
                   <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                    Pick Shell Color
-                  </label>
+                Pick Shell Color
+              </label>
                   <div className="flex flex-wrap gap-1.5">
                     {Array.from({ length: 10 }, (_, i) => i + 1).map(colorNum => {
                       const colors: Record<number, { bg: string; border: string }> = {
@@ -931,12 +931,12 @@ function App() {
                         10: { bg: '#F5F0E8', border: '#D0C5B8' }, // Cream
                       };
                       return (
-                        <button
-                          key={colorNum}
-                          onClick={() => goToBodyColor(colorNum)}
-                          title={bodyColorNames[colorNum - 1]}
+                  <button
+                    key={colorNum}
+                    onClick={() => goToBodyColor(colorNum)}
+                    title={bodyColorNames[colorNum - 1]}
                           className={`w-7 h-7 md:w-8 md:h-8 rounded-full border-2 transition-all duration-200
-                          ${currentBodyColor === colorNum 
+                    ${currentBodyColor === colorNum 
                             ? 'scale-110 shadow-md' 
                             : 'hover:scale-105 hover:shadow-sm'
                           }`}
@@ -947,45 +947,45 @@ function App() {
                         />
                       );
                     })}
-                  </div>
-                </div>
+              </div>
+            </div>
 
-                {/* Background Section */}
-                <div>
+            {/* Background Section */}
+            <div>
                   <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                    Set Background Style
-                  </label>
+                Set Background Style
+              </label>
                   <div className="flex flex-wrap gap-1.5">
                     {Array.from({ length: 24 }, (_, i) => i + 1).map(bgNum => (
-                      <button
-                        key={bgNum}
-                        onClick={() => goToBackground(bgNum)}
-                        title={backgroundNames[bgNum - 1]}
+                  <button
+                    key={bgNum}
+                    onClick={() => goToBackground(bgNum)}
+                    title={backgroundNames[bgNum - 1]}
                         className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
-                        ${currentBackground === bgNum 
+                    ${currentBackground === bgNum 
                           ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
                           : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
-                        }
+                    }
                         text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
-                      >
-                        {bgNum}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                  >
+                    {bgNum}
+                  </button>
+                ))}
               </div>
+            </div>
+          </div>
 
-              {/* Randomize Button */}
+          {/* Randomize Button */}
               <div className="mt-6 pt-4 border-t border-[rgba(0,0,0,0.04)]">
-                <button
-                  onClick={randomizeAll}
+            <button
+              onClick={randomizeAll}
                   className="w-full px-4 py-2.5 text-sm font-medium text-white 
                   bg-[#1a1a1a]/90 rounded-lg
                   shadow-sm transition-all duration-200 
                   hover:bg-black/90 hover:shadow
                   active:bg-black/85 active:shadow-none"
-                >
-                  Surprise Me with Random Design
+            >
+              Surprise Me with Random Design
                 </button>
               </div>
             </div>
