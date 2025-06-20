@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Cassette from './components/Cassette';
 import TapeDropdown from './components/TapeDropdown';
+import MetaTags from './components/MetaTags';
 import './styles/App.scss';
 
 // Utility function to extract YouTube playlist ID and video ID from URL
@@ -173,6 +174,8 @@ const loadFromUrlParams = () => {
 function App() {
   // Load initial settings from URL or use random defaults
   const initialSettings = loadFromUrlParams();
+  const searchParams = new URLSearchParams(window.location.search);
+  const isPreviewMode = searchParams.get('preview') === 'true';
 
   const [currentCover, setCurrentCover] = useState<number>(initialSettings.cover);
   const [currentBodyColor, setCurrentBodyColor] = useState<number>(initialSettings.bodyColor);
@@ -188,13 +191,13 @@ function App() {
   const [ytReady, setYtReady] = useState(false);
   const [ytPlayState, setYtPlayState] = useState<'STOP' | 'FW'>('STOP');
   const playerRef = useRef<HTMLDivElement>(null);
-  const { playlistId } = extractYouTubeIds(playlistUrl);
-  const [currentProgress, setCurrentProgress] = useState(0);
-  const [playlistLength, setPlaylistLength] = useState<number>(0);
+  const { playlistId, videoId } = extractYouTubeIds(playlistUrl);
+  const [currentProgress, setCurrentProgress] = useState<number>(0);
   const [currentVideoTitle, setCurrentVideoTitle] = useState<string>('');
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
-  const [playerResetKey, setPlayerResetKey] = useState(0);
-  
+  const [playlistLength, setPlaylistLength] = useState<number>(0);
+  const [playerResetKey, setPlayerResetKey] = useState<number>(0);
+
   // Detect if we're on mobile
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const updateInterval = isMobile ? 2000 : 1000; // 2s on mobile, 1s on desktop
@@ -289,27 +292,42 @@ function App() {
     };
   }, [player, currentTrackIndex, ytPlayState]);
 
-  // Create or update player when ready or playlist changes
+  // Create a persistent container for the player
+  useEffect(() => {
+    const container = document.createElement('div');
+    container.id = 'yt-player-container';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    
+    // Add it to the DOM
+    const playerTarget = playerRef.current;
+    if (playerTarget) {
+      playerTarget.appendChild(container);
+    }
+
+    // Cleanup function to remove the container
+    return () => {
+      if (playerTarget && container.parentNode === playerTarget) {
+        playerTarget.removeChild(container);
+      }
+    };
+  }, []); // Empty deps array - only run once on mount
+
   useEffect(() => {
     if (!ytReady || !playlistId) return;
-    
+
     const initializePlayer = () => {
-      const playerTarget = playerRef.current;
-      if (!playerTarget) return;
+      const container = document.getElementById('yt-player-container');
+      if (!container) return;
       
       // Clear any existing player
       if (player) {
         try {
-          // Remove all event listeners before destroying
-          if (!player.destroyed) {
-            player.removeEventListener('onStateChange');
-            player.removeEventListener('onReady');
-            player.removeEventListener('onError');
-          }
           player.destroy();
         } catch (e) {
           console.warn('Error cleaning up player:', e);
         }
+        setPlayer(null);
       }
 
       // Reset all states when switching playlists
@@ -368,13 +386,27 @@ function App() {
             console.error('YouTube player error:', event.data);
           }
         }
-    };
+      };
 
       // Create new player instance
-      new (window as any).YT.Player(playerTarget, playerConfig);
+      new (window as any).YT.Player('yt-player-container', playerConfig);
     };
 
-    initializePlayer();
+    // Small delay to ensure DOM is ready
+    const timer = setTimeout(initializePlayer, 0);
+
+    // Cleanup function
+    return () => {
+      clearTimeout(timer);
+      if (player) {
+        try {
+          player.destroy();
+        } catch (e) {
+          console.warn('Error cleaning up player:', e);
+        }
+        setPlayer(null);
+      }
+    };
   }, [ytReady, playlistId, playerResetKey]);
 
   // Memoize progress calculation
@@ -525,7 +557,13 @@ function App() {
 
   return (
     <div className={`app background-${currentBackground}`}>
-      {/* Top Navigation Bar */}
+      <MetaTags
+        title={currentLabel}
+        description={`Listen to ${currentLabel} - a custom mixtape created on rockorpop.com. ${currentVideoTitle ? `Now playing: ${currentVideoTitle}` : ''}`}
+        imageUrl={`${window.location.origin}/og-image/${currentCover}-${currentBodyColor}-${currentBackground}.png`}
+        currentVideoTitle={currentVideoTitle}
+      />
+      
       <nav className="fixed top-0 left-0 right-0 h-14 md:h-16 flex items-center justify-between px-3 md:px-4 z-[2000]">
         <div className="flex items-center gap-2 md:gap-3">
           <button 
@@ -561,7 +599,7 @@ function App() {
         {/* Main Content */}
         <main className="flex-1">
           {/* Cassette Section */}
-          <div className="pt-48 pb-32 flex flex-col items-center">
+          <div className={`${isPreviewMode ? 'pt-8' : 'pt-48'} pb-32 flex flex-col items-center`}>
             <div className="w-full max-w-3xl mx-auto flex flex-col items-center gap-12">
               {/* Cassette Component */}
               <div className="w-full flex flex-col items-center gap-8">
@@ -573,7 +611,6 @@ function App() {
                   progress={currentProgress}
                 />
                 
-                {/* Playback Controls */}
                 <div className="flex justify-center items-center bg-black/50 backdrop-blur-md rounded-full px-4 py-1 shadow-lg">
                   <div className="flex items-center gap-3">
                     <button
@@ -633,7 +670,6 @@ function App() {
           </div>
         </main>
 
-        {/* Video Section as Footer - Outside main content for full width */}
         <footer className="w-screen">
           {/* Current Track Info Bar */}
           <div className="w-full h-[60px] bg-black/60 flex items-center px-4">
@@ -657,191 +693,14 @@ function App() {
           {playlistId && (
             <div className="w-full flex justify-center bg-black pt-5 pb-10">
               <div className="w-full max-w-[356px] aspect-video">
-                <div id="yt-player-bar" ref={playerRef} className="w-full h-full" />
+                <div 
+                  ref={playerRef}
+                  className="w-full h-full" 
+                />
               </div>
             </div>
           )}
         </footer>
-      </div>
-
-      {/* Side Panel Overlay */}
-      {configPanelOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-[2000]" 
-          onClick={() => setConfigPanelOpen(false)} 
-        />
-      )}
-
-      {/* Side Panel */}
-      <div 
-        className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[350px] lg:w-[400px] h-full 
-        bg-gradient-to-br from-[rgba(250,250,250,0.55)] to-[rgba(240,240,240,0.45)] 
-        backdrop-blur-lg backdrop-saturate-[1.1] border-l border-[rgba(0,0,0,0.06)] 
-        shadow-[-4px_0_20px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out 
-        z-[2002] overflow-y-auto`}
-      >
-        <div className="sticky top-0 left-0 right-0 h-12 md:h-14 flex items-center justify-between px-6 bg-gradient-to-b from-[rgba(250,250,250,0.65)] to-transparent border-b border-[rgba(0,0,0,0.04)]">
-          <h2 className="text-[#1a1a1a] text-base font-bold">Design Your Tape</h2>
-          <button 
-            className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
-            text-[#1a1a1a] text-lg font-medium transition-all duration-200 hover:bg-black/5
-            hover:shadow-sm active:bg-black/10 active:shadow-none"
-            onClick={() => setConfigPanelOpen(false)}
-            title="Close Settings"
-          >
-            ✕
-          </button>
-        </div>
-
-        <div className="p-4 md:p-6">
-          {/* Cassette Label Section */}
-          <div className="mb-6">
-            <label 
-              htmlFor="cassette-label" 
-              className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
-            >
-              Name Your Tape
-            </label>
-            <input
-              id="cassette-label"
-              type="text"
-              value={currentLabel}
-              onChange={handleLabelChange}
-              placeholder="Enter a catchy title..."
-              className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
-              rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
-              shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
-              focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
-              placeholder:text-[#1a1a1a]/40"
-            />
-          </div>
-
-          {/* YouTube Playlist Section */}
-          <div className="mb-6">
-            <label 
-              htmlFor="playlist-url"
-              className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
-            >
-              Add Your Music
-            </label>
-            <p className="mb-2 text-xs text-[#1a1a1a]/60">Paste a YouTube playlist URL to load your favorite tracks.</p>
-            <input
-              id="playlist-url"
-              type="url"
-              value={playlistUrl}
-              onChange={handlePlaylistUrlChange}
-              placeholder="Paste YouTube playlist URL..."
-              className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
-              rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
-              shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
-              focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
-              placeholder:text-[#1a1a1a]/40"
-            />
-          </div>
-
-          {/* Style Options */}
-          <div className="space-y-6">
-            {/* Cover Art Section */}
-            <div>
-              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                Choose Cover Design
-              </label>
-              <div className="flex flex-wrap gap-1.5">
-                {Array.from({ length: totalCovers }, (_, i) => i + 1).map(coverNum => (
-                  <button
-                    key={coverNum}
-                    onClick={() => goToCover(coverNum)}
-                    className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
-                    ${currentCover === coverNum 
-                      ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
-                      : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
-                    }
-                    text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
-                  >
-                    {String.fromCharCode(64 + coverNum)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Shell Color Section */}
-            <div>
-              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                Pick Shell Color
-              </label>
-              <div className="flex flex-wrap gap-1.5">
-                {Array.from({ length: totalBodyColors }, (_, i) => i + 1).map(colorNum => {
-                  const colors: Record<number, { bg: string; border: string }> = {
-                    1: { bg: '#0E9DCC', border: '#0080AA' }, // Blue
-                    2: { bg: '#FF6C24', border: '#DF4900' }, // Orange
-                    3: { bg: '#686868', border: '#4B4B4B' }, // Dark Grey
-                    4: { bg: '#A7A7A7', border: '#838383' }, // Light Grey
-                    5: { bg: '#4CAF50', border: '#388E3C' }, // Grass Green
-                    6: { bg: '#FFD54F', border: '#FFB300' }, // Cheerful Yellow
-                    7: { bg: '#F44336', border: '#D32F2F' }, // Red
-                    8: { bg: '#7B1FA2', border: '#4A148C' }, // Purple
-                    9: { bg: '#F48FB1', border: '#F06292' }, // Pink
-                    10: { bg: '#F5F0E8', border: '#D0C5B8' }, // Cream
-                  };
-                  return (
-                    <button
-                      key={colorNum}
-                      onClick={() => goToBodyColor(colorNum)}
-                      title={bodyColorNames[colorNum - 1]}
-                      className={`w-7 h-7 md:w-8 md:h-8 rounded-full border-2 transition-all duration-200
-                      ${currentBodyColor === colorNum 
-                        ? 'scale-110 shadow-md' 
-                        : 'hover:scale-105 hover:shadow-sm'
-                      }`}
-                      style={{
-                        backgroundColor: colors[colorNum].bg,
-                        borderColor: colors[colorNum].border,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Background Section */}
-            <div>
-              <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
-                Set Background Style
-              </label>
-              <div className="flex flex-wrap gap-1.5">
-                {Array.from({ length: totalBackgrounds }, (_, i) => i + 1).map(bgNum => (
-                  <button
-                    key={bgNum}
-                    onClick={() => goToBackground(bgNum)}
-                    title={backgroundNames[bgNum - 1]}
-                    className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
-                    ${currentBackground === bgNum 
-                      ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
-                      : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
-                    }
-                    text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
-                  >
-                    {bgNum}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Randomize Button */}
-          <div className="mt-6 pt-4 border-t border-[rgba(0,0,0,0.04)]">
-            <button
-              onClick={randomizeAll}
-              className="w-full px-4 py-2.5 text-sm font-medium text-white 
-              bg-[#1a1a1a]/90 rounded-lg
-              shadow-sm transition-all duration-200 
-              hover:bg-black/90 hover:shadow
-              active:bg-black/85 active:shadow-none"
-            >
-              Surprise Me with Random Design
-            </button>
-          </div>
-        </div>
       </div>
 
       {/* Share Dialog */}
@@ -919,6 +778,7 @@ function App() {
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                     </svg>
+                    Twitter
                   </a>
                   <a 
                     href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`}
@@ -947,6 +807,186 @@ function App() {
                     WhatsApp
                   </a>
                 </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Config Panel */}
+      {configPanelOpen && (
+        <>
+          <div 
+            className="fixed inset-0 bg-black/20 z-[2000]" 
+            onClick={() => setConfigPanelOpen(false)} 
+          />
+          <div 
+            className={`fixed top-0 ${configPanelOpen ? 'right-0' : '-right-full'} w-full md:w-[350px] lg:w-[400px] h-full 
+            bg-gradient-to-br from-[rgba(250,250,250,0.55)] to-[rgba(240,240,240,0.45)] 
+            backdrop-blur-lg backdrop-saturate-[1.1] border-l border-[rgba(0,0,0,0.06)] 
+            shadow-[-4px_0_20px_rgba(0,0,0,0.06)] transition-all duration-300 ease-in-out 
+            z-[2002] overflow-y-auto`}
+          >
+            <div className="sticky top-0 left-0 right-0 h-12 md:h-14 flex items-center justify-between px-6 bg-gradient-to-b from-[rgba(250,250,250,0.65)] to-transparent border-b border-[rgba(0,0,0,0.04)]">
+              <h2 className="text-[#1a1a1a] text-base font-bold">Design Your Tape</h2>
+              <button 
+                className="w-7 h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
+                text-[#1a1a1a] text-lg font-medium transition-all duration-200 hover:bg-black/5
+                hover:shadow-sm active:bg-black/10 active:shadow-none"
+                onClick={() => setConfigPanelOpen(false)}
+                title="Close Settings"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="p-4 md:p-6">
+              {/* Cassette Label Section */}
+              <div className="mb-6">
+                <label 
+                  htmlFor="cassette-label" 
+                  className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
+                >
+                  Name Your Tape
+                </label>
+                <input
+                  id="cassette-label"
+                  type="text"
+                  value={currentLabel}
+                  onChange={handleLabelChange}
+                  placeholder="Enter a catchy title..."
+                  className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
+                  rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
+                  shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
+                  focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
+                  placeholder:text-[#1a1a1a]/40"
+                />
+              </div>
+
+              {/* YouTube Playlist Section */}
+              <div className="mb-6">
+                <label 
+                  htmlFor="playlist-url"
+                  className="block mb-1.5 text-[#1a1a1a] text-sm font-medium"
+                >
+                  Add Your Music
+                </label>
+                <p className="mb-2 text-xs text-[#1a1a1a]/60">Paste a YouTube playlist URL to load your favorite tracks.</p>
+                <input
+                  id="playlist-url"
+                  type="url"
+                  value={playlistUrl}
+                  onChange={handlePlaylistUrlChange}
+                  placeholder="Paste YouTube playlist URL..."
+                  className="w-full px-3 py-2 text-[14px] border border-[rgba(0,0,0,0.15)] 
+                  rounded-lg bg-white/75 text-[#1a1a1a] transition-all duration-200
+                  shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)]
+                  focus:outline-none focus:border-black/30 focus:ring-2 focus:ring-black/5 focus:bg-white/85
+                  placeholder:text-[#1a1a1a]/40"
+                />
+              </div>
+
+              {/* Style Options */}
+              <div className="space-y-6">
+                {/* Cover Art Section */}
+                <div>
+                  <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
+                    Choose Cover Design
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Array.from({ length: 5 }, (_, i) => i + 1).map(coverNum => (
+                      <button
+                        key={coverNum}
+                        onClick={() => goToCover(coverNum)}
+                        className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
+                        ${currentCover === coverNum 
+                          ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
+                          : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
+                        }
+                        text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
+                      >
+                        {String.fromCharCode(64 + coverNum)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Shell Color Section */}
+                <div>
+                  <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
+                    Pick Shell Color
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Array.from({ length: 10 }, (_, i) => i + 1).map(colorNum => {
+                      const colors: Record<number, { bg: string; border: string }> = {
+                        1: { bg: '#0E9DCC', border: '#0080AA' }, // Blue
+                        2: { bg: '#FF6C24', border: '#DF4900' }, // Orange
+                        3: { bg: '#686868', border: '#4B4B4B' }, // Dark Grey
+                        4: { bg: '#A7A7A7', border: '#838383' }, // Light Grey
+                        5: { bg: '#4CAF50', border: '#388E3C' }, // Grass Green
+                        6: { bg: '#FFD54F', border: '#FFB300' }, // Cheerful Yellow
+                        7: { bg: '#F44336', border: '#D32F2F' }, // Red
+                        8: { bg: '#7B1FA2', border: '#4A148C' }, // Purple
+                        9: { bg: '#F48FB1', border: '#F06292' }, // Pink
+                        10: { bg: '#F5F0E8', border: '#D0C5B8' }, // Cream
+                      };
+                      return (
+                        <button
+                          key={colorNum}
+                          onClick={() => goToBodyColor(colorNum)}
+                          title={bodyColorNames[colorNum - 1]}
+                          className={`w-7 h-7 md:w-8 md:h-8 rounded-full border-2 transition-all duration-200
+                          ${currentBodyColor === colorNum 
+                            ? 'scale-110 shadow-md' 
+                            : 'hover:scale-105 hover:shadow-sm'
+                          }`}
+                          style={{
+                            backgroundColor: colors[colorNum].bg,
+                            borderColor: colors[colorNum].border,
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Background Section */}
+                <div>
+                  <label className="block mb-2 text-xs text-[#1a1a1a]/60 font-medium">
+                    Set Background Style
+                  </label>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Array.from({ length: 24 }, (_, i) => i + 1).map(bgNum => (
+                      <button
+                        key={bgNum}
+                        onClick={() => goToBackground(bgNum)}
+                        title={backgroundNames[bgNum - 1]}
+                        className={`w-7 h-7 md:w-8 md:h-8 rounded-full border 
+                        ${currentBackground === bgNum 
+                          ? 'bg-[#1a1a1a]/90 text-white border-[#1a1a1a]/90 shadow-sm' 
+                          : 'bg-white/75 text-[#1a1a1a] border-[rgba(0,0,0,0.15)] hover:border-[#1a1a1a]/75 hover:shadow-sm'
+                        }
+                        text-xs md:text-sm font-medium transition-all duration-200 flex items-center justify-center`}
+                      >
+                        {bgNum}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Randomize Button */}
+              <div className="mt-6 pt-4 border-t border-[rgba(0,0,0,0.04)]">
+                <button
+                  onClick={randomizeAll}
+                  className="w-full px-4 py-2.5 text-sm font-medium text-white 
+                  bg-[#1a1a1a]/90 rounded-lg
+                  shadow-sm transition-all duration-200 
+                  hover:bg-black/90 hover:shadow
+                  active:bg-black/85 active:shadow-none"
+                >
+                  Surprise Me with Random Design
+                </button>
               </div>
             </div>
           </div>
