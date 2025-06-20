@@ -109,20 +109,12 @@ const tapePresets = [
     url: '?cover=3&shell=3&bg=12&label=Hip-Hop%20Hotlist&playlist=PLAKS_37ubZXB1LHq2Jm_612ysFjxYN9rA',
   },
   {
-    label: 'International Rock Hotlist',
-    url: '?cover=4&shell=7&bg=8&label=International%20Rock%20Hotlist&playlist=RDCLAK5uy_n-80IyhPQK7Dkdz1qBIkR-LqpH4cNgiYU',
-  },
-  {
     label: 'Country Hotlist',
     url: '?cover=2&shell=10&bg=6&label=Country%20Hotlist&playlist=RDCLAK5uy_lJ8xZWiZj2GCw7MArjakb6b0zfvqwldps',
   },
   {
     label: 'Latin Hotlist 2025',
     url: '?cover=5&shell=2&bg=17&label=Latin%20Hotlist%202025&playlist=PLAwhEEKBIS-43clk16b_nU0JMNn2_VMIO',
-  },
-  {
-    label: 'EDM Hotlist',
-    url: '?cover=1&shell=8&bg=13&label=EDM%20Hotlist&playlist=PL4Yq_wbU8pAoW4bejLKuMj2Q3a11MZnZv',
   },
 ];
 
