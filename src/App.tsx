@@ -294,6 +294,16 @@ function App() {
 
   // Create a persistent container for the player
   useEffect(() => {
+    // Only create container if we have a playlist
+    if (!playlistId) {
+      // Clean up any existing container
+      const existingContainer = document.getElementById('yt-player-container');
+      if (existingContainer) {
+        existingContainer.remove();
+      }
+      return;
+    }
+
     const container = document.createElement('div');
     container.id = 'yt-player-container';
     container.style.width = '100%';
@@ -302,6 +312,11 @@ function App() {
     // Add it to the DOM
     const playerTarget = playerRef.current;
     if (playerTarget) {
+      // Clean up any existing container first
+      const existingContainer = document.getElementById('yt-player-container');
+      if (existingContainer) {
+        existingContainer.remove();
+      }
       playerTarget.appendChild(container);
     }
 
@@ -311,7 +326,7 @@ function App() {
         playerTarget.removeChild(container);
       }
     };
-  }, []); // Empty deps array - only run once on mount
+  }, [playlistId]); // Run when playlistId changes
 
   useEffect(() => {
     if (!ytReady || !playlistId) return;
@@ -506,7 +521,33 @@ function App() {
   };
 
   const handlePlaylistUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPlaylistUrl(e.target.value);
+    const newUrl = e.target.value;
+    setPlaylistUrl(newUrl);
+    
+    if (!newUrl.trim()) {
+      // Reset all player-related state when URL is empty
+      setCurrentVideoTitle('');
+      setCurrentTrackIndex(0);
+      setPlaylistLength(0);
+      setYtPlayState('STOP');
+      setCurrentProgress(0);
+      return;
+    }
+    
+    // Extract playlist ID from the new URL
+    const { playlistId, videoId } = extractYouTubeIds(newUrl);
+    
+    if (playlistId) {
+      // Update URL params to preserve current design settings
+      updateUrlParams(
+        currentCover,
+        currentBodyColor,
+        currentBackground,
+        currentLabel,
+        playlistId,
+        videoId
+      );
+    }
   };
 
   const handleShareTape = () => {
