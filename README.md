@@ -16,51 +16,9 @@ A beautiful web app for creating and sharing virtual mixtapes with a retro casse
 - **Share Your Tapes**: Generate shareable links to your customized mixtapes
 - **Social Media Preview**: Rich social media previews when sharing your mixtapes, showing your exact cassette design
 
-## 🚀 Getting Started
+## 🌐 Live Demo
 
-### Prerequisites
-
-- Node.js >= 18.0.0
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/kohlhofer/rockorpop.git
-cd rockorpop
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Build for production:
-```bash
-npm run build
-```
-
-### Generating Social Preview Images
-
-The app includes a script to generate Open Graph preview images for all possible cassette combinations:
-
-```bash
-npm run generate-previews
-```
-
-This will create preview images in the `public/og-image` directory for:
-- All cassette cover designs (5)
-- All shell colors (10)
-- All background styles (24)
-- All possible combinations
-
-Note: The preview generation script requires Node.js and uses browser APIs, so it needs to be run in a browser-like environment.
+Visit [rockorpop.com](https://rockorpop.com) to try it out!
 
 ## 🛠️ Built With
 
@@ -85,7 +43,11 @@ The app features a skeuomorphic design that brings the nostalgic feel of cassett
 
 ## 📝 License
 
-ISC License
+**All Rights Reserved**
+
+This project is proprietary software. It is NOT open source. No part of this software may be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the owner.
+
+Copyright © 2025 Alex. All rights reserved.
 
 ## 🌐 Live Demo
 

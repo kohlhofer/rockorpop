@@ -32,7 +32,7 @@
     "url": "https://github.com/yourusername/rockorpop/issues"
   },
   "homepage": "https://rockorpop.com",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
