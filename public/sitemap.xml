@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One entry, on purpose. Every other URL on this site encodes a specific tape
+  in its query string — user-generated, unbounded, and not ours to advertise.
+  The landing page is the only canonical, stable URL the site has.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://rockorpop.com/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

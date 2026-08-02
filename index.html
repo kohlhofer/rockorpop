@@ -3,7 +3,51 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>rockorpop.com | Create and share virtual mixtapes</title>
+    <!-- Static defaults for crawlers and for the landing view. When a tape is
+         loaded, MetaTags.tsx overrides title/description/og/canonical through
+         react-helmet-async — Helmet replaces duplicates, so these are a baseline
+         rather than a conflict. Crawlers that don't execute JS see only these,
+         which is the reason they belong here and not in the app. -->
+    <title>Rock or Pop — turn a YouTube playlist into a virtual cassette</title>
+    <meta name="description" content="Turn any YouTube playlist into a virtual cassette tape you can customise and share. Five cover designs, ten shell colours, 24 backgrounds, and a link that plays. Free, no account." />
+    <link rel="canonical" href="https://rockorpop.com/" />
+    <meta name="theme-color" content="#000000" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="rockorpop.com" />
+    <meta property="og:url" content="https://rockorpop.com/" />
+    <meta property="og:title" content="Rock or Pop — turn a YouTube playlist into a virtual cassette" />
+    <meta property="og:description" content="Turn any YouTube playlist into a virtual cassette tape you can customise and share. Free, no account." />
+    <meta property="og:image" content="https://rockorpop.com/og-image/1-1-1.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="A virtual cassette tape made from a YouTube playlist" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@rockorpop" />
+    <meta name="twitter:title" content="Rock or Pop — turn a YouTube playlist into a virtual cassette" />
+    <meta name="twitter:description" content="Turn any YouTube playlist into a virtual cassette tape you can customise and share. Free, no account." />
+    <meta name="twitter:image" content="https://rockorpop.com/og-image/1-1-1.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Rock or Pop",
+        "url": "https://rockorpop.com/",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web browser",
+        "description": "Turn any YouTube playlist into a virtual cassette tape you can customise and share.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "featureList": [
+          "Turn a YouTube playlist into a playable cassette",
+          "Five cover designs, ten shell colours, and 24 backgrounds",
+          "Custom tape labels",
+          "Shareable links that preview your exact tape"
+        ]
+      }
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-NW6Q8QDT8R"></script>
     <script>
