@@ -734,13 +734,26 @@ function App() {
           {playlistId && (
             <div className="w-full flex justify-center bg-black pt-5 pb-10">
               <div className="w-full max-w-[356px] aspect-video">
-                <div 
+                <div
                   ref={playerRef}
-                  className="w-full h-full" 
+                  className="w-full h-full"
                 />
               </div>
             </div>
           )}
+
+          {/* Studio credit */}
+          <div className="w-full bg-black/60 py-3 text-center text-xs text-white/50">
+            Rock or Pop is a project by{' '}
+            <a
+              href="https://fieldbw.com"
+              className="underline hover:text-white/80"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Field Bureau + Werkstatt
+            </a>
+          </div>
         </footer>
       </div>
 
